@@ -1,0 +1,223 @@
+package com.identify.sdk.webrtc.wait
+
+import android.content.Context
+import android.os.Bundle
+import android.view.View
+import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
+import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
+import com.identify.sdk.IdentifyActivity
+import com.identify.sdk.webrtc.CallViewModel
+import com.identify.sdk.R
+import com.identify.sdk.base.BaseFragment
+import com.identify.sdk.repository.model.CustomerInformationEntity
+import com.identify.sdk.repository.model.SocketActionType
+import com.identify.sdk.repository.model.enums.SocketConnectionStatus
+import com.identify.sdk.repository.network.ApiImpl
+import com.identify.sdk.repository.soket.RtcConnectionSource
+import com.identify.sdk.repository.soket.SocketSource
+import com.identify.sdk.util.observe
+import com.identify.sdk.webrtc.OnFragmentTransactionListener
+import com.identify.sdk.webrtc.sure.AreYouSureDialogFragment
+import es.dmoral.toasty.Toasty
+import kotlinx.android.synthetic.main.app_toolbar.view.*
+import kotlinx.android.synthetic.main.fragment_waiting_call.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+
+
+@ExperimentalCoroutinesApi
+class CallWaitingFragment : BaseFragment(),
+    AreYouSureDialogFragment.AreYouSureListenerInterface {
+
+
+    //region Properties
+
+    private var sureDialogFragment : AreYouSureDialogFragment ?= null
+
+    private val viewModel: CallViewModel by activityViewModels()
+
+    private var onFragmentTransactionListener: OnFragmentTransactionListener ?= null
+
+    private val socketSource : SocketSource by lazy {
+        SocketSource.getInstance()
+    }
+
+    private val rtcConnectionSource : RtcConnectionSource by lazy {
+       RtcConnectionSource.getInstance()
+    }
+
+    private val apiImp : ApiImpl by lazy {
+        ApiImpl()
+    }
+
+    //endregion
+
+
+    //region Functions
+
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+
+       init()
+
+        observeDataChanges()
+
+        viewModel.observeSocketStatus()
+
+        viewTitle.ivBack.setOnClickListener {
+            showSureFragment()
+        }
+
+        val callback = object : OnBackPressedCallback(true ) {
+            override fun handleOnBackPressed() {
+                showSureFragment()
+            }
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
+
+        btnReConnect.setOnClickListener {
+                btnReConnect.isEnabled = false
+                viewModel.connectSocket()
+                Toasty.info(requireContext(),"Lütfen Bekleyin",Toast.LENGTH_SHORT).show()
+        }
+
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (activity is IdentifyActivity) {
+            onFragmentTransactionListener = activity as OnFragmentTransactionListener
+        } else {
+            throw RuntimeException("$context must implement OnFragmentInteractionListener")
+        }
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        onFragmentTransactionListener = null
+    }
+
+
+
+    fun init(){
+        arguments?.let {
+            val customer =  it.getParcelable<CustomerInformationEntity>("customer")
+            customer?.let {
+                context?.let { it1 ->
+                    socketSource.init(it1)
+                    rtcConnectionSource.init(customer,it1,socketSource)
+                    viewModel.initSources(socketSource,rtcConnectionSource,customer,apiImp)
+                }
+
+            }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.connectSocket()
+    }
+
+
+
+
+
+
+
+
+    fun showSureFragment(){
+        if (sureDialogFragment == null) sureDialogFragment =  AreYouSureDialogFragment.newInstance()
+        sureDialogFragment?.let {
+            childFragmentManager.beginTransaction().add(it,AreYouSureDialogFragment::class.java.toString()).commitAllowingStateLoss()
+        }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        sureDialogFragment?.let {
+            it.dismissAllowingStateLoss()
+        }
+        sureDialogFragment = null
+    }
+
+
+    companion object {
+
+        @JvmStatic
+        fun newInstance(customer : CustomerInformationEntity) =
+            CallWaitingFragment().apply {
+                arguments = Bundle().apply {
+                    putParcelable("customer", customer)
+                }
+            }
+    }
+
+
+
+     fun observeDataChanges() {
+        observe(viewModel.successData){
+            when(it.action){
+                SocketActionType.INIT_CALL.type->{
+                onFragmentTransactionListener?.onOpenCallingFragment()
+                }
+                SocketActionType.IM_ONLINE.type -> {
+                Toast.makeText(context,getString(R.string.customer_service_online),Toast.LENGTH_LONG).show()
+                }
+                SocketActionType.IM_OFFLINE.type -> {
+                    Toast.makeText(context,getString(R.string.customer_service_offline),Toast.LENGTH_LONG).show()
+                }
+            }
+        }
+
+        observe(viewModel.errorData) {
+            linLayConnectionLost.visibility = View.VISIBLE
+            linLayConnectionSuccess.visibility = View.GONE
+            btnReConnect.isEnabled = true
+
+        }
+
+        observe(viewModel.socketStatus){
+            when(it){
+                SocketConnectionStatus.OPEN->{
+                    btnReConnect.isEnabled = true
+                    linLayConnectionSuccess.visibility = View.VISIBLE
+                    linLayConnectionLost.visibility = View.GONE
+
+                }
+                SocketConnectionStatus.CLOSE->{
+                    linLayConnectionLost.visibility = View.VISIBLE
+                    linLayConnectionSuccess.visibility = View.GONE
+                    btnReConnect.isEnabled = true
+
+                }
+                SocketConnectionStatus.EXCEPTION->{
+                    linLayConnectionLost.visibility = View.VISIBLE
+                    linLayConnectionSuccess.visibility = View.GONE
+                    Toasty.error(requireContext(),getString(R.string.reason_network),Toast.LENGTH_SHORT).show()
+                    btnReConnect.isEnabled = true
+                }
+            }
+        }
+
+    }
+
+
+    override fun getLayoutId(): Int = R.layout.fragment_waiting_call
+
+
+    override fun onHandleSureData() {
+        sureDialogFragment?.let {
+            it.dismiss()
+        }
+        viewModel.disconnectSocket()
+        activity?.finish()
+
+    }
+
+
+    //endregion
+
+}

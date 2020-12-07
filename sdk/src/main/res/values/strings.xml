@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+
+
+
+	<string name="no_internet_button_text">Schließen</string>
+	<string name="no_internet_text">Sie haben keine Internetverbindung, bitte überprüfen Sie</string>
+	<string name="no_internet_title">Keine Verbindung</string>
+	<string name="connection_error_when_calling">Getrennt. Gehen Sie an einen Ort, an dem eine starke Verbindung besteht, damit der Kundenvertreter Sie erreichen kann</string>
+	<string name="are_you_sure">bist du sicher ?</string>
+	<string name="yes">Ja</string>
+	<string name="no">Nein</string>
+	<string name="app_name">WebRtc</string>
+	<string name="pls_wait_for_calling">Der Kundenbetreuer wird Sie in Kürze anrufen. \n Danke fürs Warten.</string>
+	<string name="receiving_a_call">ident24 sucht Kundenservice.…</string>
+	<string name="customer_service_online">Kundenservice online</string>
+	<string name="customer_service_offline">Kundenservice offline</string>
+	<string name="desc_toggle_microphone">Mic On-Off</string>
+	<string name="desc_hangup">hangup</string>
+	<string name="desc_toggle_camera">Camera On-Off</string>
+	<string name="connecting_stream">Anschließen ...</string>
+	<string name="wait_call_title">Warte auf Anruf</string>
+	<string name="success_connection">Erfolgreiche Verbindung</string>
+	<string name="connection_try_again">verbinden</string>
+	<string name="connection_error_title">Überprüfen Sie Ihre Internetverbindung und klicken Sie auf die Schaltfläche, um eine Verbindung zu unserem Kundenvertreter herzustellen</string>
+	<string name="enter_pin">Bitte TAN hier antragen</string>
+	<string name="enter_pin_description">Bitte geben Sie den SMS-Code ein</string>
+	<string name="confirm">Bestätigen</string>
+	<string name="reason_network">Verbindungsfehler</string>
+	<string name="reason_empty_body">Response is empty</string>
+	<string name="reason_authentication_error">Authentication Error</string>
+	<string name="reason_success_socket_data_send">Data send successful</string>
+	<string name="reason_generic">Something went wrong</string>
+	<string name="reason_response">Woops, seems we got a server error</string>
+	<string name="reason_timeout">Server timed out</string>
+	<string name="reason_socket_connection">Ihre Internetverbindung ist schlecht. Ändern Sie Ihren Platz und versuchen Sie es erneut</string>
+	<string name="reason_persistance_empty">There are no saved launches</string>
+	<string name="reason_no_network_persistance_empty">Seems there are no data and network</string>
+	<string name="button_allow">Ermöglichen</string>
+	<string name="button_deny">Verweigern</string>
+	<string name="permission_camera_rationale">Um einen Videoanruf mit dem Kundenvertreter zu führen, müssen Sie die Erlaubnis für die Kamera und das Mikrofon erteilen.</string>
+</resources>
