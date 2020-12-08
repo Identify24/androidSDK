@@ -18,7 +18,7 @@ Step 2. Add the dependency
 
 # Usage
 
-Get an singleton object from identify sdk. Then connect to sdk with ID number, thats all.
+get an singleton object from identify sdk. Then connect to sdk with ID number, thats all.
 
 <pre>
   IdentifySdk.getInstance().startIdentification(this,"efc8366f-faa6-11ea-b65c-005056bb3f3f"){ errorMessage ->
@@ -31,10 +31,10 @@ Get an singleton object from identify sdk. Then connect to sdk with ID number, t
 
 Permissions needed for sdk
 
-<pre>
+```
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
-</pre>
+```
