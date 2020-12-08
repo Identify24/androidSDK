@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Identify.iml" filepath="$PROJECT_DIR$/.idea/modules/Identify.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Identify.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Identify.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/sdk/Identify.sdk.iml" filepath="$PROJECT_DIR$/.idea/modules/sdk/Identify.sdk.iml" />
+    </modules>
+  </component>
+</project>
