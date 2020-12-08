@@ -21,7 +21,7 @@ Step 2. Add the dependency
 Get an singleton object from identify sdk. Then connect to sdk with ID number, thats all.
 
 <pre>
-  IdentifySdk.getInstance().startIdentification(this,"efc8366f-faa6-11ea-b65c-005056bb3f3f"){ errorMessage ->
+  IdentifySdk.getInstance().startIdentification(this,"xxxx-xxxx-xxxx-xxxx-xxxxxxx"){ errorMessage ->
             // handle error message
             Toast.makeText(this, errorMessage,Toast.LENGTH_SHORT).show()
         }
