@@ -15,6 +15,7 @@ class IdentifySdk {
         ApiImpl()
     }
 
+    val identifyErrorListener : IdentifyErrorListener ?= null
 
 
 
@@ -22,6 +23,7 @@ class IdentifySdk {
         private val identifySdk by lazy {
             IdentifySdk()
         }
+        @JvmStatic
         fun getInstance() : IdentifySdk =
             identifySdk
     }
@@ -59,13 +61,13 @@ class IdentifySdk {
     }
 
 
-     fun startIdentification(context: Context, identificationID: String,identificationErrorListener: (errorText : String)-> Unit){
+     fun startIdentification(context: Context, identificationID: String){
         verifyIdentificationId(identificationID,{ customer ->
             val intent = Intent(context, IdentifyActivity::class.java)
             intent.putExtra("customer",customer)
             context.startActivity(intent)
         },{
-           identificationErrorListener(it)
+            identifyErrorListener?.identError(it)
         })
         }
 
