@@ -15,7 +15,7 @@ class IdentifySdk {
         ApiImpl()
     }
 
-    val identifyErrorListener : IdentifyErrorListener ?= null
+    var identifyErrorListener : IdentifyErrorListener ?= null
 
 
 
