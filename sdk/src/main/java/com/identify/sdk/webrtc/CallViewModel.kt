@@ -1,5 +1,6 @@
 package com.identify.sdk.webrtc
 
+import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.identify.sdk.base.*
@@ -11,6 +12,7 @@ import com.identify.sdk.repository.model.entities.TanEntity
 import com.identify.sdk.repository.model.enums.SdpType
 import com.identify.sdk.repository.model.enums.SocketConnectionStatus
 import com.identify.sdk.repository.model.socket.*
+import com.identify.sdk.repository.network.Api
 import com.identify.sdk.repository.network.ApiImpl
 import com.identify.sdk.repository.soket.RtcConnectionSource
 import com.identify.sdk.repository.soket.SocketSource
@@ -26,13 +28,15 @@ import retrofit2.Response
 class CallViewModel  : BaseViewModel<SocketResponse>() {
 
 
-    private var socketSource : SocketSource ?= null
+     val apiImpl : ApiImpl by lazy {
+         ApiImpl()
+     }
 
-    var rtcConnectionSource : RtcConnectionSource?= null
+     var socketSource : SocketSource  = SocketSource.getInstance()
 
-    private var apiImpl : ApiImpl ?= null
+     var rtcConnectionSource : RtcConnectionSource  = RtcConnectionSource.getInstance()
 
-    private var customerInformationEntity : CustomerInformationEntity?= null
+     var customerInformationEntity : CustomerInformationEntity?= null
 
     val socketStatus = MutableLiveData<SocketConnectionStatus>()
 
@@ -45,20 +49,14 @@ class CallViewModel  : BaseViewModel<SocketResponse>() {
     var tanCode : String ?= null
 
 
-
-
-   fun initSources(socketSource : SocketSource,rtcConnectionSource: RtcConnectionSource,customerInformation : CustomerInformationEntity,apiImpl: ApiImpl){
-
-        if (this.customerInformationEntity == null) this.customerInformationEntity = customerInformation
-        if (this.rtcConnectionSource == null) this.rtcConnectionSource = rtcConnectionSource
-        if (this.socketSource == null) this.socketSource = socketSource
-        if (this.apiImpl == null) this.apiImpl = apiImpl
-   }
+    fun initRtcResource(context: Context){
+        customerInformationEntity?.let { rtcConnectionSource.init(it,context,socketSource) }
+    }
 
 
     fun observeSocketStatus(){
         viewModelScope.launch {
-            socketSource?.socketConnectionStatusListener = {
+            socketSource.socketConnectionStatusListener = {
                 socketStatus.postValue(it)
             }
         }
@@ -68,8 +66,8 @@ class CallViewModel  : BaseViewModel<SocketResponse>() {
 
      fun connectSocket() {
          viewModelScope.launch {
-             socketSource?.ifExistSocketConnection()
-             socketSource?.socketEvent()?.collect {
+             socketSource.ifExistSocketConnection()
+             socketSource.socketEvent().collect {
                  when (it) {
                      is Success ->{
                          when(it.successData.action){
@@ -92,11 +90,11 @@ class CallViewModel  : BaseViewModel<SocketResponse>() {
                                  }
                              }
                              SocketActionType.SDP.type ->{
-                                 val res = rtcConnectionSource?.handleSdpMessage(socketResponse = it.successData)
+                                 val res = rtcConnectionSource.handleSdpMessage(socketResponse = it.successData)
                                  handleSuccess(SocketResponse(action = res))
                              }
                              SocketActionType.CANDIDATE.type ->{
-                                 val res = rtcConnectionSource?.handleSdpMessage(socketResponse = it.successData)
+                                 val res = rtcConnectionSource.handleSdpMessage(socketResponse = it.successData)
                                  handleSuccess(SocketResponse(action = res))
                              }
                              else->{
@@ -117,7 +115,7 @@ class CallViewModel  : BaseViewModel<SocketResponse>() {
     }
 
     fun closeSocketStream(){
-        socketSource?.webSocket?.let {
+        socketSource.webSocket?.let {
             it.close(4001,"")
         }
 
@@ -127,7 +125,7 @@ class CallViewModel  : BaseViewModel<SocketResponse>() {
 
 
     suspend fun startRtcProcess() : String?{
-        return rtcConnectionSource?.handleSdpMessage(SocketResponse(SocketActionType.SDP.type,sdp = Sdp(
+        return rtcConnectionSource.handleSdpMessage(SocketResponse(SocketActionType.SDP.type,sdp = Sdp(
             type = SdpType.READY.type,sdp = null)
         ))
     }
@@ -136,14 +134,14 @@ class CallViewModel  : BaseViewModel<SocketResponse>() {
 
     fun sendNewSubscribe() : Result<SocketResponse> {
         customerInformationEntity?.customerUid?.let { id ->
-            return socketSource?.sendSubscribe(SocketSubscribe(room = id))!!
+            return socketSource.sendSubscribe(SocketSubscribe(room = id))!!
         }
         return Failure(AuthenticationError())
     }
 
     fun sendImOnline(): Result<SocketResponse> {
         customerInformationEntity?.customerUid?.let { id ->
-            return socketSource?.sendImOnline(ImOnline(room = id))!!
+            return socketSource.sendImOnline(ImOnline(room = id))!!
         }
         return Failure(AuthenticationError())
     }
@@ -159,25 +157,25 @@ class CallViewModel  : BaseViewModel<SocketResponse>() {
     }
 
     fun switchCamera(){
-        rtcConnectionSource?.switchCamera()
+        rtcConnectionSource.switchCamera()
         currentCamera = if (currentCamera == CAMERA_FRONT) CAMERA_BACK else CAMERA_FRONT
     }
 
     fun closeStream() {
-        rtcConnectionSource?.dispose()
+        rtcConnectionSource.dispose()
     }
 
     fun enableCamera(enabled: Boolean) {
-        rtcConnectionSource?.cameraEnabled = enabled
+        rtcConnectionSource.cameraEnabled = enabled
     }
 
     fun enableMicrophone(enabled: Boolean) {
-        rtcConnectionSource?.microphoneEnabled = enabled
+        rtcConnectionSource.microphoneEnabled = enabled
     }
 
     suspend fun sendStartCall(id : String) : Result<SocketResponse> {
 
-        return when(val res = socketSource?.startCall(StartCall(room = id))!!){
+        return when(val res = socketSource.startCall(StartCall(room = id))!!){
             is Success ->{
                 startRtcProcess()
                 res
@@ -190,12 +188,12 @@ class CallViewModel  : BaseViewModel<SocketResponse>() {
 
 
     fun setSmsCode(){
-        tanId?.let {tid ->
+        tanId?.let { tid ->
             tanCode?.let { code ->
                 viewModelScope.launch {
                     handleState(State.Loading())
 
-                    apiImpl?.service?.setSmsCode(TanDto(tid,code))?.enqueue( object :
+                    apiImpl.service?.setSmsCode(TanDto(tid,code))?.enqueue( object :
                         Callback<BaseApiResponse<TanEntity?>> {
                         override fun onFailure(
                             call: Call<BaseApiResponse<TanEntity?>>,
@@ -232,7 +230,7 @@ class CallViewModel  : BaseViewModel<SocketResponse>() {
             tanId?.let { tanId ->
                 tanCode?.let {code ->
                     viewModelScope.launch {
-                        socketSource?.sendTanResponse(TanResponse(room = room,tid = tanId,tan = code))?.onFailure {
+                        socketSource.sendTanResponse(TanResponse(room = room,tid = tanId,tan = code))?.onFailure {
                             handleFailure(it)
                         }
                     }

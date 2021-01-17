@@ -23,8 +23,6 @@ class RtcConnectionSource {
 
 
     companion object{
-        private val TAG: String = RtcConnectionSource::class.java.name
-
         private val rtcConnectionSource by lazy {
             RtcConnectionSource()
         }

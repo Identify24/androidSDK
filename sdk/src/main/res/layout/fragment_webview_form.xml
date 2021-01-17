@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:id="@+id/rootRelLay"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <include
+        android:id="@+id/viewTitle"
+        layout="@layout/app_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="match_parent"
+    android:layout_below="@+id/viewTitle"
+    android:layout_height="match_parent">
+    <WebView
+        android:focusable="true"
+        android:visibility="visible"
+        android:focusableInTouchMode="true"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:id="@+id/webView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"/>
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+    <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:elevation="2dp"
+        android:id="@+id/relLayLoading"
+        android:background="@android:color/white"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ProgressBar
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </RelativeLayout>
+</RelativeLayout>

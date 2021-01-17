@@ -8,7 +8,6 @@ import com.identify.sdk.repository.model.SocketActionType
 import com.identify.sdk.repository.model.enums.SocketConnectionStatus
 import com.identify.sdk.repository.model.socket.*
 import com.identify.sdk.repository.network.TIMEOUT_DURATION
-import com.identify.sdk.unavaible_internet.livedata.ConnectionLiveData
 import com.squareup.moshi.Moshi
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.awaitClose
@@ -31,7 +30,6 @@ class SocketSource {
 
     var socketConnectionStatusListener : (socketConnectionStatus : SocketConnectionStatus) -> Unit = { _->}
 
-    private var connectionLiveData : ConnectionLiveData ?= null
 
     companion object{
         private val socketSource by lazy {
@@ -41,12 +39,6 @@ class SocketSource {
             socketSource
     }
 
-    fun init(context: Context){
-        this.context = context
-        if (connectionLiveData == null){
-            connectionLiveData = ConnectionLiveData(context)
-        }
-    }
 
 
     interface SocketResponseListener{

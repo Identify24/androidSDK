@@ -21,5 +21,7 @@ data class CustomerInformationEntity(
     @Json(name = "id")
     val id: String?,
     @Json(name = "status")
-    val status: String?
+    val status: String?,
+    @Json(name = "webview_url")
+    val webviewUrl: String?
 ) : Parcelable

@@ -7,6 +7,7 @@ import android.hardware.Camera
 import android.hardware.camera2.CameraManager
 import android.os.Build
 import android.os.Bundle
+import android.view.KeyEvent
 import android.view.View
 import android.view.WindowManager
 import android.widget.EditText
@@ -70,8 +71,8 @@ class StartedCallFragment : BaseFragment()    {
         initSurfaces()
         viewModel.rtcConnectionSource.apply {
             rootEglBase = this@StartedCallFragment.rootEglBase
-            this?.surfaceViewRendererLocal = surfaceViewRendererLocal
-            this?.surfaceViewRendererRemote = surfaceViewRendererRemote
+            this.surfaceViewRendererLocal = this@StartedCallFragment.surfaceViewRendererLocal
+            this.surfaceViewRendererRemote = this@StartedCallFragment.surfaceViewRendererRemote
         }
 
 
@@ -94,20 +95,28 @@ class StartedCallFragment : BaseFragment()    {
         }
 
 
+        onBackPressClicked()
 
-
-        val callback = object : OnBackPressedCallback(true ) {
-            override fun handleOnBackPressed() {
-                onFragmentTransactionListener?.onRemoveStartedCallFragment()
-            }
-        }
-        requireActivity().onBackPressedDispatcher.addCallback(requireActivity(), callback)
 
 
     }
 
 
+    fun onBackPressClicked(){
+        view?.isFocusableInTouchMode = true
+        view?.requestFocus()
+        view?.setOnKeyListener(View.OnKeyListener { v, keyCode, event ->
+            if (keyCode == KeyEvent.KEYCODE_BACK && event.action === KeyEvent.ACTION_UP) {
+                Toasty.info(requireContext(),R.string.identify_is_in_progress,Toast.LENGTH_SHORT).show()
+                return@OnKeyListener true
+            }
+            false
+        })
+    }
+
+
     private fun initSurfaces() {
+        viewModel.initRtcResource(requireContext())
         rootEglBase = EglBase.create()
         surfaceViewRendererLocal.init(rootEglBase?.eglBaseContext, null)
         surfaceViewRendererLocal.setEnableHardwareScaler(true)
@@ -136,20 +145,23 @@ class StartedCallFragment : BaseFragment()    {
 
 
 
-     fun observeDataChanges() {
+     private fun observeDataChanges() {
         observe(viewModel.successData){
             when(it.action){
                 SocketActionType.TERMINATE_CALL.type->{
                     onFragmentTransactionListener?.onRemoveStartedCallFragment()
                 }
                 SocketActionType.IM_ONLINE.type -> {
-                    Toast.makeText(context,getString(R.string.customer_service_online), Toast.LENGTH_LONG).show()
+                    // Toast.makeText(context,getString(R.string.customer_service_online), Toast.LENGTH_LONG).show()
                 }
                 SocketActionType.IM_OFFLINE.type -> {
                     onFragmentTransactionListener?.onRemoveStartedCallFragment()
-                    Toast.makeText(context,getString(R.string.customer_service_offline), Toast.LENGTH_LONG).show()
+                    // Toast.makeText(context,getString(R.string.customer_service_offline), Toast.LENGTH_LONG).show()
                 }
                 SocketActionType.END_CALL.type->{
+                    onFragmentTransactionListener?.onRemoveStartedCallFragment()
+                }
+                SocketActionType.SUBREJECTED.type->{
                     onFragmentTransactionListener?.onRemoveStartedCallFragment()
                 }
                 SocketActionType.SDP.type->{
@@ -182,8 +194,7 @@ class StartedCallFragment : BaseFragment()    {
                     it.message?.get(0)?.let { it1 -> Toasty.error(requireContext(), it1,Toast.LENGTH_SHORT).show() }
                 }
                 else -> {
-                    Toasty.error(requireContext(),getString(R.string.connection_error_when_calling),Toast.LENGTH_LONG).show()
-                    onFragmentTransactionListener?.onRemoveStartedCallFragment()
+                    errorProccess()
                 }
             }
 
@@ -208,8 +219,10 @@ class StartedCallFragment : BaseFragment()    {
         observe(viewModel.socketStatus){
             when(it){
                 SocketConnectionStatus.CLOSE->{
-                    Toasty.error(requireContext(),getString(R.string.connection_error_when_calling),Toast.LENGTH_LONG).show()
-                    onFragmentTransactionListener?.onRemoveStartedCallFragment()
+                    errorProccess()
+                }
+                SocketConnectionStatus.EXCEPTION->{
+                    errorProccess()
                 }
             }
         }
@@ -222,6 +235,11 @@ class StartedCallFragment : BaseFragment()    {
         }
 
 
+    }
+
+    fun errorProccess(){
+        Toasty.error(requireContext(),getString(R.string.connection_error_when_calling),Toast.LENGTH_LONG).show()
+        onFragmentTransactionListener?.onRemoveStartedCallFragment()
     }
 
 

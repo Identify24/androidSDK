@@ -15,6 +15,7 @@ enum class SocketActionType(val type : String) {
     END_CALL("endCall"),
     REQUEST_TAN("requestTan"),
     TOGGLECAMERA("toggleCamera"),
+    SUBREJECTED("subRejected"),
     TOGGLEFlASH("toggleFlash");
 
 

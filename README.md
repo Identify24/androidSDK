@@ -14,20 +14,17 @@ Add it in your root build.gradle at the end of repositories:
 	
 Step 2. Add the dependency
 
-<pre>implementation 'com.github.Identify24:androidSDK:1.0.2'</pre>
+<pre>implementation 'com.github.Identify24:androidSDK:1.0.0'</pre>
 
 # Usage
 
 Get an singleton object from identify sdk. Then connect to sdk with ID number, thats all.
 
 <pre>
-  IdentifySdk.getInstance().startIdentification(this,"xxxx-xxxx-xxxx-xxxx-xxxxxxx")
-  
-   IdentifySdk.getInstance().identifyErrorListener = object : IdentifyErrorListener{
-                override fun identError(errorMessage: String) {
-                    Toast.makeText(context,errorMessage,Toast.LENGTH_SHORT).show()
-                }
-         }
+  IdentifySdk.getInstance().startIdentification(this,"xxxx-xxxx-xxxx-xxxx-xxxxxxx"){ errorMessage ->
+            // handle error message
+            Toast.makeText(this, errorMessage,Toast.LENGTH_SHORT).show()
+        }
 </pre>
 
 # Permission

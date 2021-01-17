@@ -38,7 +38,7 @@
                 android:layout_gravity="center_horizontal"
                 app:lottie_autoPlay="true"
                 app:lottie_loop="true"
-                app:lottie_rawRes="@raw/pls_wait_animation" />
+                app:lottie_rawRes="@raw/please_wait" />
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/titleBoldTxt"

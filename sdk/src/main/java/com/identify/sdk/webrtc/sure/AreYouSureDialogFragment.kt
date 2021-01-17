@@ -26,8 +26,21 @@ class AreYouSureDialogFragment : BaseDialogFragment() {
         noBtn.setOnClickListener {
             dismiss()
         }
+        onBackPressClicked()
 
     }
+
+    private fun onBackPressClicked(){
+        view?.isFocusableInTouchMode = true
+        view?.requestFocus()
+        view?.setOnKeyListener(View.OnKeyListener { v, keyCode, event ->
+            if (keyCode == KeyEvent.KEYCODE_BACK && event.action === KeyEvent.ACTION_UP) {
+                return@OnKeyListener true
+            }
+            false
+        })
+    }
+
 
     override fun onAttach(context: Context) {
         super.onAttach(context)

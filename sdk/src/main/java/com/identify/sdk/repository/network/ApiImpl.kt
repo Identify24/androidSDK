@@ -2,6 +2,7 @@ package com.identify.sdk.repository.network
 
 import com.identify.sdk.repository.model.BaseApiResponse
 import com.identify.sdk.repository.model.CustomerInformationEntity
+import com.identify.sdk.repository.model.dto.MrzDto
 import com.identify.sdk.repository.model.dto.TanDto
 import com.identify.sdk.repository.model.entities.TanEntity
 import com.squareup.moshi.Moshi
@@ -59,5 +60,8 @@ class ApiImpl  :
 
     override fun setSmsCode(tanDto: TanDto): Call<BaseApiResponse<TanEntity?>> =
         service.setSmsCode(tanDto)
+
+    override fun setMrzData(mrzDto: MrzDto): Call<BaseApiResponse<CustomerInformationEntity?>> =
+        service.setMrzData(mrzDto)
     //endregion
 }

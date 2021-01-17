@@ -1,14 +1,14 @@
 package com.identify.sdk.webrtc.wait
 
+import android.R.attr
 import android.content.Context
 import android.os.Bundle
+import android.view.KeyEvent
 import android.view.View
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import com.identify.sdk.IdentifyActivity
-import com.identify.sdk.webrtc.CallViewModel
 import com.identify.sdk.R
 import com.identify.sdk.base.BaseFragment
 import com.identify.sdk.repository.model.CustomerInformationEntity
@@ -18,6 +18,7 @@ import com.identify.sdk.repository.network.ApiImpl
 import com.identify.sdk.repository.soket.RtcConnectionSource
 import com.identify.sdk.repository.soket.SocketSource
 import com.identify.sdk.util.observe
+import com.identify.sdk.webrtc.CallViewModel
 import com.identify.sdk.webrtc.OnFragmentTransactionListener
 import com.identify.sdk.webrtc.sure.AreYouSureDialogFragment
 import es.dmoral.toasty.Toasty
@@ -39,17 +40,6 @@ class CallWaitingFragment : BaseFragment(),
 
     private var onFragmentTransactionListener: OnFragmentTransactionListener ?= null
 
-    private val socketSource : SocketSource by lazy {
-        SocketSource.getInstance()
-    }
-
-    private val rtcConnectionSource : RtcConnectionSource by lazy {
-       RtcConnectionSource.getInstance()
-    }
-
-    private val apiImp : ApiImpl by lazy {
-        ApiImpl()
-    }
 
     //endregion
 
@@ -71,12 +61,7 @@ class CallWaitingFragment : BaseFragment(),
             showSureFragment()
         }
 
-        val callback = object : OnBackPressedCallback(true ) {
-            override fun handleOnBackPressed() {
-                showSureFragment()
-            }
-        }
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
+        onBackPressClicked()
 
         btnReConnect.setOnClickListener {
                 btnReConnect.isEnabled = false
@@ -84,6 +69,19 @@ class CallWaitingFragment : BaseFragment(),
                 Toasty.info(requireContext(),"Lütfen Bekleyin",Toast.LENGTH_SHORT).show()
         }
 
+    }
+
+
+    fun onBackPressClicked(){
+        view?.isFocusableInTouchMode = true
+        view?.requestFocus()
+        view?.setOnKeyListener(View.OnKeyListener { v, keyCode, event ->
+            if (keyCode == KeyEvent.KEYCODE_BACK && event.action === KeyEvent.ACTION_UP) {
+                showSureFragment()
+                return@OnKeyListener true
+            }
+            false
+        })
     }
 
     override fun onAttach(context: Context) {
@@ -102,16 +100,11 @@ class CallWaitingFragment : BaseFragment(),
 
 
 
-    fun init(){
+    private fun init(){
         arguments?.let {
             val customer =  it.getParcelable<CustomerInformationEntity>("customer")
             customer?.let {
-                context?.let { it1 ->
-                    socketSource.init(it1)
-                    rtcConnectionSource.init(customer,it1,socketSource)
-                    viewModel.initSources(socketSource,rtcConnectionSource,customer,apiImp)
-                }
-
+                    viewModel.customerInformationEntity = it
             }
         }
     }
@@ -128,10 +121,10 @@ class CallWaitingFragment : BaseFragment(),
 
 
 
-    fun showSureFragment(){
+    private fun showSureFragment(){
         if (sureDialogFragment == null) sureDialogFragment =  AreYouSureDialogFragment.newInstance()
         sureDialogFragment?.let {
-            childFragmentManager.beginTransaction().add(it,AreYouSureDialogFragment::class.java.toString()).commitAllowingStateLoss()
+         if (!it.isAdded) childFragmentManager.beginTransaction().add(it,AreYouSureDialogFragment::class.java.toString()).commitAllowingStateLoss()
         }
     }
 
@@ -164,10 +157,10 @@ class CallWaitingFragment : BaseFragment(),
                 onFragmentTransactionListener?.onOpenCallingFragment()
                 }
                 SocketActionType.IM_ONLINE.type -> {
-                Toast.makeText(context,getString(R.string.customer_service_online),Toast.LENGTH_LONG).show()
+               // Toast.makeText(context,getString(R.string.customer_service_online),Toast.LENGTH_LONG).show()
                 }
                 SocketActionType.IM_OFFLINE.type -> {
-                    Toast.makeText(context,getString(R.string.customer_service_offline),Toast.LENGTH_LONG).show()
+                  // Toast.makeText(context,getString(R.string.customer_service_offline),Toast.LENGTH_LONG).show()
                 }
             }
         }
