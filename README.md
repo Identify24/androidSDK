@@ -14,22 +14,39 @@ Add it in your root build.gradle at the end of repositories:
 	
 Step 2. Add the dependency
 
-<pre>implementation 'com.github.Identify24:androidSDK:1.0.0'</pre>
+<pre>implementation 'com.github.Identify24:androidSDK:2.0.0'</pre>
 
 # Usage
 
 Get an singleton object from identify sdk. Then connect to sdk with ID number, thats all.
 
+# For Kotlin
 <pre>
-  IdentifySdk.getInstance().startIdentification(this,"xxxx-xxxx-xxxx-xxxx-xxxxxxx"){ errorMessage ->
-            // handle error message
-            Toast.makeText(this, errorMessage,Toast.LENGTH_SHORT).show()
+   IdentifySdk.getInstance().startIdentification(this,"xxxx-xxxx-xxxx-xxxx-xxxxxxx")
+        IdentifySdk.getInstance().identifyErrorListener = object : IdentifyErrorListener{
+            override fun identError(errorMessage: String) {
+                Toast.makeText(this@MainActivity,errorMessage,Toast.LENGTH_SHORT).show()
+            }
+
         }
 </pre>
 
+# For Java
+
+<pre>
+  IdentifySdk.getInstance().startIdentification(this,"xxxx-xxxx-xxxx-xxxx-xxxxxxx");
+        IdentifySdk.getInstance().setIdentifyErrorListener(new IdentifyErrorListener() {
+            @Override
+            public void identError(@NotNull String errorMessage) {
+                Toast.makeText(this,errorMessage,Toast.LENGTH_SHORT).show();
+            }
+        });
+</pre>
+
+
 # Permission
 
-Permissions needed for sdk
+Permissions used within the sdk (don't need to add, attached in the library)
 
 ```
     <uses-permission android:name="android.permission.INTERNET" />
@@ -37,4 +54,8 @@ Permissions needed for sdk
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    <uses-permission android:name="android.permission.NFC" />
+    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-feature android:name="android.hardware.nfc" />
+    <uses-feature android:name="android.hardware.camera" />
 ```
