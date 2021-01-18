@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Gradle: com.github.mhshams:jnbis:1.1.0">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../.gradle/caches/modules-2/files-2.1/com.github.mhshams/jnbis/1.1.0/fe2995f5d8e862e5aeb6b0ce88f063d0cfb6e31a/jnbis-1.1.0.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$PROJECT_DIR$/../.gradle/caches/modules-2/files-2.1/com.github.mhshams/jnbis/1.1.0/781a8d14552176f82345d3b7926b81116dd4463e/jnbis-1.1.0-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/../.gradle/caches/modules-2/files-2.1/com.github.mhshams/jnbis/1.1.0/36196ab6f281c2ec521b4589f2788c926a878c6/jnbis-1.1.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

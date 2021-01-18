@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Gradle: org.ejbca.cvc:cert-cvc:1.4.6">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../.gradle/caches/modules-2/files-2.1/org.ejbca.cvc/cert-cvc/1.4.6/7a728be32b9e6432dd1eccbce86773e9ed16c99/cert-cvc-1.4.6.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$PROJECT_DIR$/../.gradle/caches/modules-2/files-2.1/org.ejbca.cvc/cert-cvc/1.4.6/b348474818d71da25ec4937a8f453c58025247ba/cert-cvc-1.4.6-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/../.gradle/caches/modules-2/files-2.1/org.ejbca.cvc/cert-cvc/1.4.6/abbdc11dd6b8e15257547499b5126eb5463021f2/cert-cvc-1.4.6-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
