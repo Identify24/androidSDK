@@ -2,7 +2,9 @@ package com.identify.sdk
 
 import android.Manifest
 import android.app.PendingIntent
+import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
 import android.graphics.Color
 import android.net.Uri
 import android.nfc.NfcAdapter
@@ -36,6 +38,7 @@ import com.identify.sdk.webrtc.wait.CallWaitingFragment
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.jmrtd.lds.icao.MRZInfo
 import permissions.dispatcher.*
+import java.util.*
 
 
 @RuntimePermissions
@@ -53,6 +56,9 @@ class IdentifyActivity : AppCompatActivity(),
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        intent.getStringExtra("language").let {
+            setLocale(it,baseContext)
+        }
         setContentView(R.layout.activity_identify)
         changeStatusBarColor()
         showCameraWithPermissionCheck()
@@ -63,6 +69,27 @@ class IdentifyActivity : AppCompatActivity(),
                isNetworkAvailable(it)
             }
         })
+    }
+
+
+
+    private fun setLocale(selectedLocale: String?,context: Context) {
+        var locale : Locale?= null
+        if (selectedLocale == "en" || selectedLocale == "tr" || selectedLocale == "de"){
+            locale = Locale(selectedLocale)
+        }else {
+            locale = Locale("en")
+        }
+
+        Locale.setDefault(locale)
+        val config = Configuration()
+        config.locale = locale
+        context.resources.updateConfiguration(
+            config,
+            context.resources.displayMetrics
+        )
+
+
     }
 
 
@@ -157,8 +184,8 @@ class IdentifyActivity : AppCompatActivity(),
         intent.getParcelableExtra<CustomerInformationEntity>("customer")?.let {
             customerInformationEntity = it
                 when(it.status){
-                    StatusType.GO_CALL.type->{
-                        showCallWaitingFragment(it)
+                    StatusType.GO_WEB_VIEW.type->{
+                        showWebViewFormFragment(it)
                     }
                     StatusType.GO_MRZ.type->{
                         checkNfcExisting({

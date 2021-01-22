@@ -120,12 +120,12 @@ class StartedCallFragment : BaseFragment()    {
         rootEglBase = EglBase.create()
         surfaceViewRendererLocal.init(rootEglBase?.eglBaseContext, null)
         surfaceViewRendererLocal.setEnableHardwareScaler(true)
-        surfaceViewRendererLocal.setMirror(true)
+        surfaceViewRendererLocal.setMirror(false)
         surfaceViewRendererLocal.setScalingType(RendererCommon.ScalingType.SCALE_ASPECT_FILL)
 
         surfaceViewRendererRemote.init(rootEglBase?.eglBaseContext, null)
-        surfaceViewRendererRemote.setEnableHardwareScaler(false)
-        surfaceViewRendererRemote.setMirror(true)
+        surfaceViewRendererRemote.setEnableHardwareScaler(true)
+        surfaceViewRendererRemote.setMirror(false)
         surfaceViewRendererRemote.setScalingType(RendererCommon.ScalingType.SCALE_ASPECT_FILL)
     }
 

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">WebRtc</string>
+    <string name="support_error">Destek hatası</string>
+    <string name="support_error_desc"> Maalesef NFC, cihazınız tarafından desteklenmiyor. Formu doldurmak için lütfen butona tıklayınız.</string>
+    <string name="nfc_off">NFC kapalı</string>
+    <string name="nfc_off_desc">NFC ayarlarını etkinleştiriniz ve lütfen tekrar deneyiniz.</string>
+    <string name="go_to_setting">Ayarlar</string>
+    <string name="no_internet_button_text">okay</string>
+    <string name="no_internet_text">Maalesef bağlantı yok. Lütfen bağlantınızı kontrol ediniz.</string>
+    <string name="no_internet_title">Bağlantı yok.</string>
+    <string name="connection_error_when_calling">Müşteri temsilcisinin size ulaşabilmesi için lütfen bağlantınızı kontrol ediniz.</string>
+    <string name="are_you_sure">İptal edilsin mi?</string>
+    <string name="yes">Evet</string>
+    <string name="no">Hayır</string>
+    <string name="reason_network">Bağlantı hatası!</string>
+    <string name="reason_empty_body">Yanıt yok!</string>
+    <string name="reason_authentication_error">Doğrulama hatası!</string>
+    <string name="reason_success_socket_data_send">Veri gönderme başarılı!</string>
+    <string name="reason_generic">Hata oluştu!</string>
+    <string name="reason_response">Ahh, bağlantı hatası!</string>
+    <string name="reason_timeout">Süre aşımı!</string>
+    <string name="reason_socket_connection">İnternet bağlantısı yeterli değil. Lütfen tekrar deneyiniz…</string>
+    <string name="reason_persistance_empty">Mevcut veri yok!</string>
+    <string name="reason_no_network_persistance_empty">Veri veya bağlantı yok!</string>
+    <string name="nfc_toast_message">Lütfen NFC okutmayı tekrar deneyiniz…</string>
+    <string name="button_allow">Kabul et</string>
+    <string name="button_deny">Vazgeç</string>
+    <string name="permission_camera_rationale">Video ile görüşmeye başlamak için lütfen kamera ve mikrofona erişim izni veriniz.</string>
+    <string name="nfc_description">NFC okutma için lütfen telefonunuzu kimlik kartınızın üstüne tutunuz.</string>
+    <string name="nfc_ready">Taramaya hazır</string>
+    <string name="nfc_reading">NFC okunuyor. Lütfen kimlik kartını hareket ettirmeyiniz.</string>
+    <string name="nfc_try_again">NFC verileri okunamadı. Lütfen tekrar deneyiniz.</string>
+    <string name="nfc_success">NFC okutma başarılı! Müşteri temsilcisine bağlanıyor!</string>
+    <string name="pls_wait_for_calling">Bekleme alanındasınız.</string>
+    <string name="receiving_a_call">Identify arıyor…</string>
+    <string name="customer_service_online">Müşteri hizmetleri hazır.</string>
+    <string name="customer_service_offline"> Müşteri hizmetleri hazır değil. </string>
+    <string name="desc_toggle_microphone">Mikrofon Aç-Kapat</string>
+    <string name="desc_hangup">Kapat</string>
+    <string name="desc_toggle_camera">Kamera Aç-Kapat</string>
+    <string name="connecting_stream">Bağlanıyor…</string> 
+    <string name="identify_is_in_progress">kimlik doğrulama devam ediyor.</string>
+    <string name="wait_call_title">Çağrı bekleniyor…</string>
+    <string name="success_connection">Müşteri temsilciniz hemen hizmetinizde!</string>
+    <string name="connection_try_again">Tekrar bağlan…</string>
+    <string name="connection_error_title">Bağlantınızı kontrol ediniz ve müşteri temsilcisine bağlanmak icin butona tıklayınız.</string>
+    <string name="enter_pin">SMS-Opt giriniz.</string>
+    <string name="enter_pin_description">Lütfen SMS-Opt giriniz.</string>
+    <string name="confirm">Onay</string>
+    <string name="are_you_sure_title">Bekleme odasından çıktığınızda müşteri temsilcisi sizi arayamıyacak. Emin misiniz ?</string>
+</resources>

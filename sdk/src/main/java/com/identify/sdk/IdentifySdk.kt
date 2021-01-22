@@ -2,12 +2,14 @@ package com.identify.sdk
 
 import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
 import com.identify.sdk.repository.model.BaseApiResponse
 import com.identify.sdk.repository.model.CustomerInformationEntity
 import com.identify.sdk.repository.network.ApiImpl
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.util.*
 
 class IdentifySdk {
 
@@ -61,10 +63,12 @@ class IdentifySdk {
     }
 
 
-     fun startIdentification(context: Context, identificationID: String){
+
+     fun startIdentification(context: Context, identificationID: String,language : String?=null){
         verifyIdentificationId(identificationID,{ customer ->
             val intent = Intent(context, IdentifyActivity::class.java)
             intent.putExtra("customer",customer)
+            intent.putExtra("language",language)
             context.startActivity(intent)
         },{
             identifyErrorListener?.identError(it)
