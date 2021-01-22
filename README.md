@@ -46,9 +46,9 @@ Get an singleton object from identify sdk. Then connect to sdk with ID number, t
 </pre>
 
 Language is optional(can be null). Default value is English. Supported languages are English, German and Turkish.
-*for Turkish language parameter -> tr
-*for English language parameter -> en
-*for German language parameter -> de
+* for Turkish language parameter -> tr
+* for English language parameter -> en
+* for German language parameter -> de
 
 # Permission
 
