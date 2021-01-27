@@ -1,5 +1,6 @@
 package com.identify.sdk.repository.network
 
+import com.identify.sdk.base.BASE_URL
 import com.identify.sdk.repository.model.BaseApiResponse
 import com.identify.sdk.repository.model.CustomerInformationEntity
 import com.identify.sdk.repository.model.dto.MrzDto
@@ -10,7 +11,6 @@ import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Call
-import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import java.util.concurrent.TimeUnit
@@ -44,7 +44,7 @@ class ApiImpl  :
                     .build()
             )
             .addConverterFactory(MoshiConverterFactory.create(moshi))
-            .baseUrl("https://api.identify24.de/")
+            .baseUrl(BASE_URL)
             .build()
             .create(Api::class.java)
     }

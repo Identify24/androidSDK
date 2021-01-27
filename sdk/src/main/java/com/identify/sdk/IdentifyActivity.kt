@@ -73,6 +73,7 @@ class IdentifyActivity : AppCompatActivity(),
 
 
 
+
     private fun setLocale(selectedLocale: String?,context: Context) {
         var locale : Locale?= null
         if (selectedLocale == "en" || selectedLocale == "tr" || selectedLocale == "de"){

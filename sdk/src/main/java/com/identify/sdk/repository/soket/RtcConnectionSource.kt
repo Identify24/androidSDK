@@ -2,6 +2,10 @@ package com.identify.sdk.repository.soket
 
 import android.content.Context
 import android.media.AudioManager
+import com.identify.sdk.base.PASSWORD
+import com.identify.sdk.base.STUN_URL
+import com.identify.sdk.base.TURN_URL
+import com.identify.sdk.base.USERNAME
 import com.identify.sdk.repository.model.CustomerInformationEntity
 import com.identify.sdk.repository.model.SocketActionType
 import com.identify.sdk.repository.model.enums.SdpType
@@ -171,8 +175,8 @@ class RtcConnectionSource {
         videoTrack?.addSink(surfaceViewRendererLocal)
 
         // Create Connection
-        val stunServer = PeerConnection.IceServer.builder("stun:stun.l.google.com:19302").createIceServer()
-        val turnServer = PeerConnection.IceServer.builder("turn:213.95.11.105:3478").setUsername("test").setPassword("test").createIceServer()
+        val stunServer = PeerConnection.IceServer.builder(STUN_URL).createIceServer()
+        val turnServer = PeerConnection.IceServer.builder(TURN_URL).setUsername(USERNAME).setPassword(PASSWORD).createIceServer()
         peerConnection = peerConnectionFactory?.createPeerConnection(listOf(stunServer,turnServer), peerConnectionObserver)
 
         if (isInitiator) {
