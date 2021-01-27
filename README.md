@@ -20,29 +20,44 @@ Step 2. Add the dependency
 
 # Usage
 
-Get an singleton object from identify sdk. Then connect to sdk with ID number, thats all.
+First, get a singleton object by set the environment variables from identify sdk. Then connect to sdk with ID number, thats all.
 
 # For Kotlin
 <pre>
-   IdentifySdk.getInstance().startIdentification(this,"xxxx-xxxx-xxxx-xxxx-xxxxxxx","language")
-        IdentifySdk.getInstance().identifyErrorListener = object : IdentifyErrorListener{
-            override fun identError(errorMessage: String) {
-                Toast.makeText(this@MainActivity,errorMessage,Toast.LENGTH_SHORT).show()
-            }
-
-        }
+  val identifyObject = IdentifySdk.Builder()
+	.api("api url")
+        .socket("socket url","socket port")
+        .stun("stun url","stun port")
+        .turn("turn url","turn port","turn username","turn password")
+        .build()
+ identifyObject.startIdentification(this,"276ddff8-280b-11eb-a693-005056bb3f3f","tr")
+ identifyObject.identifyErrorListener = object : IdentifyErrorListener{
+    override fun identError(errorMessage: String) {
+        Toast.makeText(this@MainActivity,errorMessage,Toast.LENGTH_SHORT).show()
+    }
+}
 </pre>
 
 # For Java
 
+
+
 <pre>
-  IdentifySdk.getInstance().startIdentification(this,"xxxx-xxxx-xxxx-xxxx-xxxxxxx","language");
-        IdentifySdk.getInstance().setIdentifyErrorListener(new IdentifyErrorListener() {
-            @Override
-            public void identError(@NotNull String errorMessage) {
-                Toast.makeText(this,errorMessage,Toast.LENGTH_SHORT).show();
-            }
-        });
+
+ IdentifySdk identifyObject = new IdentifySdk.Builder()
+         .api("api url")
+         .socket("socket url","socket port")
+         .stun("stun url","stun port")
+         .turn("turn url","turn port","turn username","turn password")
+         .build();
+ identifyObject.startIdentification(this,"xxxx-xxxx-xxxx-xxxx-xxxxxxx","language");
+ identifyObject.setIdentifyErrorListener(new IdentifyErrorListener() {
+    @Override
+    public void identError(@NotNull String errorMessage) {
+        Toast.makeText(getBaseContext(),errorMessage,Toast.LENGTH_SHORT).show();
+    }
+});
+
 </pre>
 
 Language is optional(can be null). Default value is English. Supported languages are English, German and Turkish.
