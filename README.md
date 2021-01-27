@@ -16,7 +16,7 @@ Add it in your root build.gradle at the end of repositories:
 	
 Step 2. Add the dependency
 
-<pre>implementation 'com.github.Identify24:androidSDK:2.1.0'</pre>
+<pre>implementation 'com.github.Identify24:androidSDK:2.2.0'</pre>
 
 # Usage
 
