@@ -30,7 +30,9 @@ First, get a singleton object by set the environment variables from identify sdk
         .stun("stun url","stun port")
         .turn("turn url","turn port","turn username","turn password")
         .build()
+	
  identifyObject.startIdentification(this,"276ddff8-280b-11eb-a693-005056bb3f3f","tr")
+ 
  identifyObject.identifyErrorListener = object : IdentifyErrorListener{
     override fun identError(errorMessage: String) {
         Toast.makeText(this@MainActivity,errorMessage,Toast.LENGTH_SHORT).show()
@@ -50,7 +52,9 @@ First, get a singleton object by set the environment variables from identify sdk
          .stun("stun url","stun port")
          .turn("turn url","turn port","turn username","turn password")
          .build();
+	 
  identifyObject.startIdentification(this,"xxxx-xxxx-xxxx-xxxx-xxxxxxx","language");
+ 
  identifyObject.setIdentifyErrorListener(new IdentifyErrorListener() {
     @Override
     public void identError(@NotNull String errorMessage) {
