@@ -84,3 +84,11 @@ Permissions used within the sdk (don't need to add, attached in the library)
     <uses-feature android:name="android.hardware.nfc" />
     <uses-feature android:name="android.hardware.camera" />
 ```
+
+
+# LICENSE
+
+Identify Android Sdk Copyright (C) 2020  Identify Turkey
+
+[GNU General Public License v3.0](https://github.com/Identify24/androidSDK/blob/main/LICENSE.md)
+
