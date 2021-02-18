@@ -20,10 +20,15 @@ Step 2. Add the dependency
 
 # Usage
 
-First, get a singleton object by set the environment variables from identify sdk. Then connect to sdk with ID number, thats all.
+Firstly, you have to create options for sdk.Then get a singleton object by set the environment variables and options from identify sdk. Then connect to sdk with ID number, thats all.
 
 # For Kotlin
 <pre>
+   val options = IdentityOptions.Builder()
+            .setIdentityType(IdentityType.ONLY_CALL) // Default value IdentityType.FULL_PROCESS
+            .setNfcExceptionCount(5) // Default value 3
+            .build()
+
   val identifyObject = IdentifySdk.Builder()
 	.api("api url")
         .socket("socket url","socket port")
@@ -45,6 +50,11 @@ First, get a singleton object by set the environment variables from identify sdk
 
 
 <pre>
+
+  IdentityOptions options = new IdentityOptions.Builder()
+                .setIdentityType(IdentityType.ONLY_CALL) // Default value IdentityType.FULL_PROCESS
+                .setNfcExceptionCount(5) // Default value 3
+                .build();
 
  IdentifySdk identifyObject = new IdentifySdk.Builder()
          .api("api url")
@@ -68,6 +78,20 @@ Language is optional(can be null). Default value is English. Supported languages
 * for Turkish language parameter -> tr
 * for English language parameter -> en
 * for German language parameter -> de
+
+NfcExceptionCount -> This number specifies the maximum number of errors to be received when reading nfc.This process is passed after the number of errors exceeds this number. This is optional(can be null, default value = 3)
+
+IdentityType -> where will the process begin and end.
+
+
+# Listeners
+
+# For Kotlin
+
+
+
+# For Java
+
 
 # Permission
 
