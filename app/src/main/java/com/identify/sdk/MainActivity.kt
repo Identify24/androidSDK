@@ -10,16 +10,23 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+
+        val options = IdentityOptions.Builder()
+            .setIdentityType(IdentityType.ONLY_CALL) // Default value IdentityType.FULL_PROCESS
+            .setNfcExceptionCount(5) // Default value 3
+            .build()
+
         val identifyObject = IdentifySdk.Builder()
-            .api("https://api.kimlikbasit.com")
-            .socket("wss://ws.kimlikbasit.com","8888")
-            .stun("stun:stun.l.google.com","19302")
-            .turn("turn:18.156.205.32","3478","test","test")
-            .options(IdentityOptions.Builder().setIdentityType(IdentityType.ONLY_CALL).build())
+            .api("api url")
+            .socket("socket url","socket port")
+            .stun("stun url","stun port")
+            .turn("turn url","turn port","turn username","turn password")
+            .options(options)
             .build()
 
 
-        identifyObject.startIdentification(this,"cd57398a-5bfb-11eb-994a-06a1762f812e","tr")
+        identifyObject.startIdentification(this,"xxxx-xxxx-xxxx-xxxx-xxxxxxx","language")
 
         identifyObject.identifyErrorListener = object : IdentifyErrorListener{
             override fun identError(errorMessage: String) {
@@ -28,31 +35,30 @@ class MainActivity : AppCompatActivity() {
         }
         identifyObject.identifyResultListener = object : IdentifyResultListener{
             override fun nfcProcessFinished(isSuccess: Boolean, mrzDto: MrzDto?) {
-                Toast.makeText(this@MainActivity,mrzDto?.name+" için nfc bitti",Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@MainActivity,"nfc process finished",Toast.LENGTH_SHORT).show()
             }
 
             override fun vitalityDetectionProcessFinished() {
-               Toast.makeText(this@MainActivity,"face bitti",Toast.LENGTH_SHORT).show()
-               // identifyObject.closeSdk()
+               Toast.makeText(this@MainActivity,"face process finished",Toast.LENGTH_SHORT).show()
             }
             override fun callProcessFinished() {
-                Toast.makeText(this@MainActivity,"call bitti",Toast.LENGTH_SHORT).show()
-                identifyObject.closeSdk()
+                Toast.makeText(this@MainActivity,"call process finished",Toast.LENGTH_SHORT).show()
+                identifyObject.closeSdk() // You can finish sdk with this method when in the process you want
             }
 
         }
 
         identifyObject.sdkLifeCycleListener = object : SdkLifeCycleListener {
             override fun sdkDestroyed() {
-
+                // Sdk Activity Destroyed
             }
 
             override fun sdkPaused() {
-
+                // Sdk Activity Paused
             }
 
             override fun sdkResumed() {
-
+                // Sdk Activity Resumed
             }
 
         }
