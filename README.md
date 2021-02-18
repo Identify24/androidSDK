@@ -92,9 +92,9 @@ IdentityType -> where will the process begin and end.There are 3 options.
 
 # Listeners
 
-IdentifyErrorListener -> "xxxx-xxxx-xxxx-xxxx-xxxxxxx" If the ident id is not found
-IdentifyResultListener -> ocr -> nfc -> vitality detection -> call = when processes are over
-SdkLifeCycleListener -> get sdk lifecycle 
+* IdentifyErrorListener -> "xxxx-xxxx-xxxx-xxxx-xxxxxxx" If the ident id is not found
+* IdentifyResultListener -> ocr -> nfc -> vitality detection -> call = when processes are over
+* SdkLifeCycleListener -> get sdk lifecycle 
 
 
 # For Kotlin
