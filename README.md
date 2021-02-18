@@ -36,13 +36,8 @@ Firstly, you have to create options for sdk.Then get a singleton object by set t
         .turn("turn url","turn port","turn username","turn password")
         .build()
 	
- identifyObject.startIdentification(this,"276ddff8-280b-11eb-a693-005056bb3f3f","tr")
+ identifyObject.startIdentification(this,"xxxx-xxxx-xxxx-xxxx-xxxxxxx","tr")
  
- identifyObject.identifyErrorListener = object : IdentifyErrorListener{
-    override fun identError(errorMessage: String) {
-        Toast.makeText(this@MainActivity,errorMessage,Toast.LENGTH_SHORT).show()
-    }
-}
 </pre>
 
 # For Java
@@ -65,12 +60,6 @@ Firstly, you have to create options for sdk.Then get a singleton object by set t
 	 
  identifyObject.startIdentification(this,"xxxx-xxxx-xxxx-xxxx-xxxxxxx","language");
  
- identifyObject.setIdentifyErrorListener(new IdentifyErrorListener() {
-    @Override
-    public void identError(@NotNull String errorMessage) {
-        Toast.makeText(getBaseContext(),errorMessage,Toast.LENGTH_SHORT).show();
-    }
-});
 
 </pre>
 
