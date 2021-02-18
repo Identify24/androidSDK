@@ -7,15 +7,12 @@ import android.os.Bundle
 import android.view.KeyEvent
 import android.view.View
 import android.webkit.*
-import androidx.activity.OnBackPressedCallback
-import com.evren.common.dialog.WebViewFormListener
 import com.identify.sdk.IdentifyActivity
 import com.identify.sdk.R
 import com.identify.sdk.base.BaseFragment
 import com.identify.sdk.webrtc.sure.AreYouSureDialogFragment
 import kotlinx.android.synthetic.main.app_toolbar.view.*
 import kotlinx.android.synthetic.main.fragment_webview_form.*
-import kotlinx.android.synthetic.main.progress_view.view.*
 
 class WebViewFormFragment : BaseFragment(), AreYouSureDialogFragment.AreYouSureListenerInterface {
 

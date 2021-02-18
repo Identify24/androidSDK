@@ -53,12 +53,18 @@ class CallingFragment : BaseFragment()   {
             onFragmentTransactionListener?.onRemoveCallingFragment()
         }*/
         buttonAcceptCall.setOnClickListener {
-            onFragmentTransactionListener?.onRemoveCallingFragment()
-            onFragmentTransactionListener?.onOpenStartedCallFragment()
+            setCallStartedFragmentDefaultArgument()
+            goStartedCallFragment()
+
         }
 
         onBackPressClicked()
 
+    }
+
+    private fun setCallStartedFragmentDefaultArgument() {
+        viewModel.callStarted = false
+        viewModel.handlerWorked = false
     }
 
     private fun onBackPressClicked(){
@@ -106,10 +112,20 @@ class CallingFragment : BaseFragment()   {
         onFragmentTransactionListener = null
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
+
+    override fun onDestroy() {
+        super.onDestroy()
         mediaPlayer?.stop()
         mediaPlayer = null
+    }
+
+    fun goCallWaitFragment(){
+        onFragmentTransactionListener?.onOpenWaitFragment()
+        onFragmentTransactionListener?.onRemoveCallingFragment()
+    }
+    fun goStartedCallFragment(){
+        onFragmentTransactionListener?.onOpenStartedCallFragment()
+        onFragmentTransactionListener?.onRemoveCallingFragment()
     }
 
 
@@ -119,20 +135,7 @@ class CallingFragment : BaseFragment()   {
          observe(viewModel.successData){
             when(it.action){
                 SocketActionType.TERMINATE_CALL.type->{
-                    onFragmentTransactionListener?.onRemoveCallingFragment()
-                }
-                SocketActionType.IM_ONLINE.type -> {
-                    //  Toast.makeText(context,getString(R.string.customer_service_online), Toast.LENGTH_LONG).show()
-                }
-                SocketActionType.IM_OFFLINE.type -> {
-                    onFragmentTransactionListener?.onRemoveCallingFragment()
-                    Toast.makeText(context,getString(R.string.customer_service_offline), Toast.LENGTH_LONG).show()
-                }
-                SocketActionType.SUBREJECTED.type->{
-                    onFragmentTransactionListener?.onRemoveCallingFragment()
-                }
-                SocketActionType.END_CALL.type->{
-                    onFragmentTransactionListener?.onRemoveCallingFragment()
+                    goCallWaitFragment()
                 }
             }
         }
@@ -159,7 +162,7 @@ class CallingFragment : BaseFragment()   {
 
     private fun errorProcess(){
         Toasty.error(requireContext(),getString(R.string.connection_error_when_calling),Toast.LENGTH_LONG).show()
-        onFragmentTransactionListener?.onRemoveCallingFragment()
+        goCallWaitFragment()
     }
 
 

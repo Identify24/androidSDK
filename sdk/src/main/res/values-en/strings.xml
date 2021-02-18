@@ -49,4 +49,13 @@
     <string name="enter_pin_description">Please enter the TAN</string>
     <string name="confirm">Confirm</string>
     <string name="are_you_sure_title">Are you sure you want to cancel?</string>
+    <string name="nfc_error_count_title">Nfc Data Read Counter Error</string>
+    <string name="nfc_error_count_desc">You have reached the maximum number of nfc read errors. Continue with the customer representative.</string>
+    <string name="nfc_error_count_btn">Continue</string>
+    <string name="smiling_text">YOU CAN CONTINUE WITH A POWERFUL SMILE.</string>
+    <string name="blink_text">you can blink to connect customer services</string>
+    <string name="redirect_to_customer_services">YOU MUST BLINK TO DETECT VITALITY...</string>
+    <string name="turn_your_head_right_text">TURN YOUR HEAD TO THE RIGHT AT 45 DEGREES TO DETECT VITALITY.</string>
+    <string name="turn_your_head_left_text">FINALLY, TURN YOUR HEAD TO THE LEFT AT 45 DEGREES TO DETECT VITALITY.</string>
+    <string name="finish_process">YOU HAVE COMPLETED THE AUTHENTICATION, THANK YOU...</string>
 </resources>

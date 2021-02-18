@@ -3,6 +3,7 @@ package com.identify.sdk.repository.soket
 
 import android.content.Context
 import android.util.Log
+import com.identify.sdk.SdkApp.SOCKET_BASE_URL
 import com.identify.sdk.base.*
 import com.identify.sdk.repository.model.SocketActionType
 import com.identify.sdk.repository.model.enums.SocketConnectionStatus
@@ -71,13 +72,16 @@ class SocketSource {
 
      fun sendTanResponse(tanResponse: TanResponse) = safeExecute(TanResponse::class.java,tanResponse)
 
-     fun sendCameraChanged(toggle: CameraToggle) = safeExecute(CameraToggle::class.java,toggle)
+     fun sendToogleStatus(resultToogle: ResultToogle) = safeExecute(ResultToogle::class.java,resultToogle)
 
-    fun sendFlashChanged(toggle: FlashToggle) = safeExecute(FlashToggle::class.java,toggle)
+    fun sendNfcStatusType(nfcStatus: NfcStatus) = safeExecute(NfcStatus::class.java,nfcStatus)
+
+    fun sendFinishCall(callRejected: CallRejected) = safeExecute(CallRejected::class.java,callRejected)
+
 
 
     private fun start() {
-        val request: Request = Request.Builder().url(SOCKET_BASE_URL).build()
+        val request: Request = Request.Builder().url(SOCKET_BASE_URL.toString()).build()
         okHttpClient = OkHttpClient.Builder()
             .connectTimeout(TIMEOUT_DURATION, TimeUnit.SECONDS)
             .readTimeout(TIMEOUT_DURATION, TimeUnit.SECONDS)

@@ -1,6 +1,6 @@
 package com.identify.sdk.repository.network
 
-import com.identify.sdk.base.BASE_URL
+import com.identify.sdk.SdkApp.BASE_URL
 import com.identify.sdk.repository.model.BaseApiResponse
 import com.identify.sdk.repository.model.CustomerInformationEntity
 import com.identify.sdk.repository.model.dto.MrzDto

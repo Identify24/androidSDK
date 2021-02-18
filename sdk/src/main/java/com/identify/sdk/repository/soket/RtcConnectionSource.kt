@@ -2,15 +2,16 @@ package com.identify.sdk.repository.soket
 
 import android.content.Context
 import android.media.AudioManager
-import com.identify.sdk.base.PASSWORD
-import com.identify.sdk.base.STUN_URL
-import com.identify.sdk.base.TURN_URL
-import com.identify.sdk.base.USERNAME
+import com.identify.sdk.SdkApp.PASSWORD
+import com.identify.sdk.SdkApp.STUN_URL
+import com.identify.sdk.SdkApp.TURN_URL
+import com.identify.sdk.SdkApp.USERNAME
 import com.identify.sdk.repository.model.CustomerInformationEntity
 import com.identify.sdk.repository.model.SocketActionType
 import com.identify.sdk.repository.model.enums.SdpType
-import com.identify.sdk.repository.model.socket.CameraToggle
+import com.identify.sdk.repository.model.enums.ToogleType
 import com.identify.sdk.repository.model.socket.DataChannelMessage
+import com.identify.sdk.repository.model.socket.ResultToogle
 import com.identify.sdk.repository.model.socket.SocketResponse
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.json.JSONObject
@@ -91,12 +92,27 @@ class RtcConnectionSource {
         }
 
     fun switchCamera(cameraSwitchHandler: CameraVideoCapturer.CameraSwitchHandler? = null){
-        try {
-            videoCapturer?.switchCamera(cameraSwitchHandler)
-            socketSource?.sendCameraChanged(CameraToggle(result = true))
-        }catch (e: Exception){
-            socketSource?.sendCameraChanged(CameraToggle(result = false))
+        customerInformationEntity?.customerUid?.let { room ->
+            try {
+                videoCapturer?.switchCamera(cameraSwitchHandler)
+                socketSource?.sendToogleStatus(
+                    ResultToogle(
+                        action = ToogleType.TOOGLE_CAMERA.type,
+                        result = true,
+                        room = room
+                    )
+                )
+            }catch (e: Exception){
+                socketSource?.sendToogleStatus(
+                    ResultToogle(
+                        action = ToogleType.TOOGLE_CAMERA.type,
+                        result = false,
+                        room = room
+                    )
+                )
+            }
         }
+
     }
 
 

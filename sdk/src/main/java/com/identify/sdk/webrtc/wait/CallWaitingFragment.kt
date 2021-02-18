@@ -65,7 +65,7 @@ class CallWaitingFragment : BaseFragment(),
 
         btnReConnect.setOnClickListener {
                 btnReConnect.isEnabled = false
-                viewModel.connectSocket()
+                viewModel.nfcStatusType?.let { it1 -> viewModel.connectSocket(false, it1) }
                 Toasty.info(requireContext(),"Lütfen Bekleyin",Toast.LENGTH_SHORT).show()
         }
 
@@ -111,7 +111,7 @@ class CallWaitingFragment : BaseFragment(),
 
     override fun onResume() {
         super.onResume()
-        viewModel.connectSocket()
+        viewModel.nfcStatusType?.let { viewModel.connectSocket(false, it) }
     }
 
 
@@ -148,19 +148,17 @@ class CallWaitingFragment : BaseFragment(),
             }
     }
 
+    private fun openCallingFragment(){
+        onFragmentTransactionListener?.onOpenCallingFragment()
+        onFragmentTransactionListener?.onRemoveWaitFragment()
+    }
 
 
-     fun observeDataChanges() {
+     private fun observeDataChanges() {
         observe(viewModel.successData){
             when(it.action){
                 SocketActionType.INIT_CALL.type->{
-                onFragmentTransactionListener?.onOpenCallingFragment()
-                }
-                SocketActionType.IM_ONLINE.type -> {
-               // Toast.makeText(context,getString(R.string.customer_service_online),Toast.LENGTH_LONG).show()
-                }
-                SocketActionType.IM_OFFLINE.type -> {
-                  // Toast.makeText(context,getString(R.string.customer_service_offline),Toast.LENGTH_LONG).show()
+                    openCallingFragment()
                 }
             }
         }
@@ -169,7 +167,6 @@ class CallWaitingFragment : BaseFragment(),
             linLayConnectionLost.visibility = View.VISIBLE
             linLayConnectionSuccess.visibility = View.GONE
             btnReConnect.isEnabled = true
-
         }
 
         observe(viewModel.socketStatus){

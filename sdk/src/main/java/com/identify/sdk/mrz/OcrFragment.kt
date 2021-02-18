@@ -2,25 +2,27 @@ package com.identify.sdk.mrz
 
 import android.content.Context
 import android.os.Bundle
+import android.os.Handler
 import android.view.View
-import androidx.core.os.bundleOf
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.identify.sdk.IdentifyActivity
 import com.identify.sdk.R
 import com.identify.sdk.base.BaseFragment
-import com.identify.sdk.form.WebViewFormFragment
 import com.identify.sdk.mrz.mlkit.camera.CameraSource
 import com.identify.sdk.mrz.mlkit.text.TextRecognitionProcessor
-import com.identify.sdk.repository.model.CustomerInformationEntity
+import com.identify.sdk.repository.model.SocketActionType
 import com.identify.sdk.repository.model.mrz.DocType
+import com.identify.sdk.util.observe
 import com.identify.sdk.webrtc.CallViewModel
 import com.identify.sdk.webrtc.OnFragmentTransactionListener
 import kotlinx.android.synthetic.main.fragment_mrz.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.launch
 import org.jmrtd.lds.icao.MRZInfo
 import java.io.IOException
 
+@ExperimentalCoroutinesApi
 class OcrFragment : BaseFragment() ,
     TextRecognitionProcessor.ResultListener {
 
@@ -29,10 +31,13 @@ class OcrFragment : BaseFragment() ,
     var isOcrSuccess : Boolean = false
     private var onFragmentTransactionListener: OnFragmentTransactionListener ?= null
 
+    private val viewModel: CallViewModel by activityViewModels()
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         createCameraSource()
+        observeDataChanges()
     }
 
 
@@ -57,9 +62,25 @@ class OcrFragment : BaseFragment() ,
         }
     }
 
+
+    private fun observeDataChanges() {
+        observe(viewModel.successData){
+            when(it.action){
+                SocketActionType.SKIPNFC.type->{
+                    onFragmentTransactionListener?.onRemoveOcrFragment()
+                    onFragmentTransactionListener?.onOpenFaceDetectionFragment()
+                }
+            }
+        }
+    }
+
     override fun onResume() {
         super.onResume()
-        startCameraSource()
+       lifecycleScope.launch {
+           startCameraSource()
+       }
+
+
     }
 
     override fun onPause() {
@@ -100,6 +121,7 @@ class OcrFragment : BaseFragment() ,
         mrzInfo?.let {
             if (!isOcrSuccess){
                 isOcrSuccess = true
+                onFragmentTransactionListener?.onRemoveOcrFragment()
                 onFragmentTransactionListener?.onOpenNfcFragment(it)
             }
 

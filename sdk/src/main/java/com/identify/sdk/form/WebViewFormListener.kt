@@ -1,4 +1,4 @@
-package com.evren.common.dialog
+package com.identify.sdk.form
 
 interface WebViewFormListener {
     fun onSuccess()

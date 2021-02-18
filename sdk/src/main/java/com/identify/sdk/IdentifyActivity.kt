@@ -5,7 +5,6 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
-import android.graphics.Color
 import android.net.Uri
 import android.nfc.NfcAdapter
 import android.nfc.Tag
@@ -21,20 +20,28 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import com.evren.common.dialog.WebViewFormListener
+import androidx.lifecycle.ViewModelProvider
+import com.identify.sdk.SdkApp.destroy
+import com.identify.sdk.SdkApp.identityOptions
+import com.identify.sdk.face.FaceDetectionFragment
 import com.identify.sdk.form.WebViewFormFragment
+import com.identify.sdk.form.WebViewFormListener
 import com.identify.sdk.mrz.NfcFragment
 import com.identify.sdk.mrz.OcrFragment
 import com.identify.sdk.repository.model.CustomerInformationEntity
-import com.identify.sdk.repository.model.enums.StatusType
+import com.identify.sdk.repository.model.SocketActionType
+import com.identify.sdk.repository.model.dto.MrzDto
+import com.identify.sdk.repository.model.enums.*
 import com.identify.sdk.unavaible_internet.livedata.ConnectionLiveData
 import com.identify.sdk.unavaible_internet.ui.NoInternetDialogFragment
 import com.identify.sdk.util.alert
-import com.identify.sdk.util.positiveButton
+import com.identify.sdk.webrtc.CallViewModel
 import com.identify.sdk.webrtc.OnFragmentTransactionListener
 import com.identify.sdk.webrtc.calling.CallingFragment
 import com.identify.sdk.webrtc.started.StartedCallFragment
+import com.identify.sdk.webrtc.thanks.ThankYouFragment
 import com.identify.sdk.webrtc.wait.CallWaitingFragment
+import es.dmoral.toasty.Toasty
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.jmrtd.lds.icao.MRZInfo
 import permissions.dispatcher.*
@@ -45,17 +52,18 @@ import java.util.*
 @ExperimentalCoroutinesApi
 class IdentifyActivity : AppCompatActivity(),
     NoInternetDialogFragment.NoInternetClickInterface,
-    OnFragmentTransactionListener, WebViewFormListener {
+    OnFragmentTransactionListener, WebViewFormListener,IdentifyResultListener {
 
     private var noInternetAlertDialogFragment : NoInternetDialogFragment?= null
 
-    private var customerInformationEntity : CustomerInformationEntity ?= null
-
     private var adapter : NfcAdapter ?= null
+
+    var viewModel : CallViewModel ?= null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        viewModel = ViewModelProvider(this).get(CallViewModel::class.java)
         intent.getStringExtra("language").let {
             setLocale(it,baseContext)
         }
@@ -63,15 +71,19 @@ class IdentifyActivity : AppCompatActivity(),
         changeStatusBarColor()
         showCameraWithPermissionCheck()
         supportActionBar?.hide()
-        val connectionLiveData = ConnectionLiveData(this)
-        connectionLiveData.observe(this, Observer { isConnected ->
-            isConnected?.let {
-               isNetworkAvailable(it)
-            }
-        })
+        observeDataChanges()
+        sdkListenerSetup()
     }
 
+    private fun sdkListenerSetup() {
+        IdentifySdk.getInstance().sdkCloseListener = object : SdkCloseListener{
+            override fun finishSdk() {
+                this@IdentifyActivity.finish()
+            }
 
+        }
+
+    }
 
 
     private fun setLocale(selectedLocale: String?,context: Context) {
@@ -93,44 +105,95 @@ class IdentifyActivity : AppCompatActivity(),
 
     }
 
+    private fun showThankYouFragment(){
+        if (supportFragmentManager.findFragmentByTag(ThankYouFragment::class.java.toString()) == null ){
+            supportFragmentManager.beginTransaction().add(R.id.fragmentContainer, ThankYouFragment.newInstance(),ThankYouFragment::class.java.toString()).commitAllowingStateLoss()
+            println("şimdi buradaydı = " + "show ThankYouFragment")
+        }
+    }
 
+    private fun removeThankYouFragment(){
+        supportFragmentManager.findFragmentByTag(ThankYouFragment::class.java.toString())?.let {
+            supportFragmentManager.beginTransaction().remove(it).commitAllowingStateLoss()
+            println("şimdi buradaydı = " + "remove ThankYouFragment")
+        }
+    }
+
+
+    private fun showFaceDetectionFragment(){
+        if (supportFragmentManager.findFragmentByTag(FaceDetectionFragment::class.java.toString()) == null ){
+            supportFragmentManager.beginTransaction().add(R.id.fragmentContainer, FaceDetectionFragment.newInstance(),FaceDetectionFragment::class.java.toString()).commitAllowingStateLoss()
+            println("şimdi buradaydı = " + "show FaceDetectionFragment")
+        }
+    }
+
+    private fun removeFaceDetectionFragment(){
+        supportFragmentManager.findFragmentByTag(FaceDetectionFragment::class.java.toString())?.let {
+            supportFragmentManager.beginTransaction().remove(it).commitAllowingStateLoss()
+            println("şimdi buradaydı = " + "remove FaceDetectionFragment")
+        }
+    }
 
     private fun showOcrFragment(){
-     supportFragmentManager.beginTransaction().add(R.id.fragmentContainer, OcrFragment.newInstance(),OcrFragment::class.java.toString()).commitAllowingStateLoss()
+        if (supportFragmentManager.findFragmentByTag(OcrFragment::class.java.toString()) == null ){
+            supportFragmentManager.beginTransaction().add(R.id.fragmentContainer, OcrFragment.newInstance(),OcrFragment::class.java.toString()).commitAllowingStateLoss()
+            println("şimdi buradaydı = " + "show OcrFragment")
+        }
     }
 
     private fun removeOcrFragment(){
         supportFragmentManager.findFragmentByTag(OcrFragment::class.java.toString())?.let {
             supportFragmentManager.beginTransaction().remove(it).commitAllowingStateLoss()
+            println("şimdi buradaydı = " + "remove OcrFragment")
         }
     }
 
     private fun showWebViewFormFragment(customer : CustomerInformationEntity){
-        customer.webviewUrl?.let { url ->
-            supportFragmentManager.beginTransaction().add(R.id.fragmentContainer,WebViewFormFragment.newInstance(url),WebViewFormFragment::class.java.toString()).commitAllowingStateLoss()
+        if (supportFragmentManager.findFragmentByTag(WebViewFormFragment::class.java.toString()) == null ){
+            customer.webviewUrl?.let { url ->
+                supportFragmentManager.beginTransaction().add(R.id.fragmentContainer,WebViewFormFragment.newInstance(url),WebViewFormFragment::class.java.toString()).commitAllowingStateLoss()
+                println("şimdi buradaydı = " + "show WebViewFormFragment")
+            }
         }
     }
 
     private fun removeWebViewFormFragment(){
         supportFragmentManager.findFragmentByTag(WebViewFormFragment::class.java.toString())?.let {
             supportFragmentManager.beginTransaction().remove(it).commitAllowingStateLoss()
+            println("şimdi buradaydı = " + "remove WebViewFormFragment")
         }
     }
 
 
-    private fun showCallWaitingFragment(customer : CustomerInformationEntity){
-        supportFragmentManager.beginTransaction().add(R.id.fragmentContainer,CallWaitingFragment.newInstance(customer),CallWaitingFragment::class.java.toString()).commitAllowingStateLoss()
+    private fun showCallWaitingFragment(){
+        viewModel?.customerInformationEntity?.let {
+            if (supportFragmentManager.findFragmentByTag(CallWaitingFragment::class.java.toString()) == null ){
+                supportFragmentManager.beginTransaction().add(R.id.fragmentContainer,CallWaitingFragment.newInstance(it),CallWaitingFragment::class.java.toString()).commitAllowingStateLoss()
+                println("şimdi buradaydı = " + "show CallWaitingFragment")
+            }
+        }
+    }
+
+    private fun removeCallWaitingFragment(){
+        supportFragmentManager.findFragmentByTag(CallWaitingFragment::class.java.toString())?.let {
+            supportFragmentManager.beginTransaction().remove(it).commitAllowingStateLoss()
+            println("şimdi buradaydı = " + "remove CallWaitingFragment")
+        }
     }
 
 
     private fun showCallingFragment(){
-        supportFragmentManager.beginTransaction().add(R.id.fragmentContainer,CallingFragment.newInstance(),CallingFragment::class.java.toString()).commitAllowingStateLoss()
+        if (supportFragmentManager.findFragmentByTag(CallingFragment::class.java.toString()) == null ){
+            supportFragmentManager.beginTransaction().add(R.id.fragmentContainer,CallingFragment.newInstance(),CallingFragment::class.java.toString()).commitAllowingStateLoss()
+            println("şimdi buradaydı = " + " show CallingFragment")
+        }
     }
 
 
     private fun removeCallingFragment(){
         supportFragmentManager.findFragmentByTag(CallingFragment::class.java.toString())?.let {
             supportFragmentManager.beginTransaction().remove(it).commitAllowingStateLoss()
+            println("şimdi buradaydı = " + " remove CallingFragment")
         }
     }
 
@@ -138,19 +201,24 @@ class IdentifyActivity : AppCompatActivity(),
     private fun removeStartedCallFragment() {
         supportFragmentManager.findFragmentByTag(StartedCallFragment::class.java.toString())?.let {
             supportFragmentManager.beginTransaction().remove(it).commitAllowingStateLoss()
+            println("şimdi buradaydı = " + " remove StartedCallFragment")
         }
     }
 
 
     private fun showCallStartedFragment() {
-        supportFragmentManager.beginTransaction().add(R.id.fragmentContainer,StartedCallFragment.newInstance(),StartedCallFragment::class.java.toString()).commitAllowingStateLoss()
+        if (supportFragmentManager.findFragmentByTag(StartedCallFragment::class.java.toString()) == null ){
+            supportFragmentManager.beginTransaction().add(R.id.fragmentContainer,StartedCallFragment.newInstance(),StartedCallFragment::class.java.toString()).commitAllowingStateLoss()
+            println("şimdi buradaydı = " + " show CallStartedFragment")
+        }
     }
 
+
     private fun showNfcFragment(mrzInfo: MRZInfo, customer : CustomerInformationEntity) {
-        val fragment : Fragment? = supportFragmentManager.findFragmentByTag(NfcFragment::class.java.toString())
-        if (fragment == null ){
+        if (supportFragmentManager.findFragmentByTag(NfcFragment::class.java.toString()) == null ){
             supportFragmentManager.beginTransaction().add(R.id.fragmentContainer,NfcFragment.newInstance(mrzInfo,customer),NfcFragment::class.java.toString()).commitAllowingStateLoss()
             startNfcReader()
+            println("şimdi buradaydı = " + " show NfcFragment")
         }
 
     }
@@ -158,12 +226,13 @@ class IdentifyActivity : AppCompatActivity(),
     private fun removeNfcFragment() {
         supportFragmentManager.findFragmentByTag(NfcFragment::class.java.toString())?.let {
             supportFragmentManager.beginTransaction().remove(it).commitAllowingStateLoss()
+            println("şimdi buradaydı = " + " remove NfcFragment")
         }
         clearNfcReader()
     }
 
 
-    fun changeStatusBarColor(){
+    private fun changeStatusBarColor(){
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             val window: Window = window
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
@@ -183,20 +252,26 @@ class IdentifyActivity : AppCompatActivity(),
     @NeedsPermission(Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO)
     fun showCamera() {
         intent.getParcelableExtra<CustomerInformationEntity>("customer")?.let {
-            customerInformationEntity = it
+            viewModel?.customerInformationEntity = it
                 when(it.status){
                     StatusType.GO_WEB_VIEW.type->{
                         showWebViewFormFragment(it)
                     }
                     StatusType.GO_MRZ.type->{
-                        checkNfcExisting({
-                            showOcrFragment()
-                        },{
-                            showWebViewFormFragment(it)
-                        })
+                        when(identityOptions?.getIdentityType()){
+                            IdentityType.ONLY_CALL->{
+                                showCallWaitingFragment()
+                            }
+                            IdentityType.WITHOUT_CALL->{
+                                checkNfcExisting()
+                            }
+                            IdentityType.FULL_PROCESS->{
+                                checkNfcExisting()
+                            }
+                        }
                     }
                     else->{
-                        showWebViewFormFragment(it)
+                        showCallWaitingFragment()
                     }
                 }
 
@@ -250,12 +325,50 @@ class IdentifyActivity : AppCompatActivity(),
         }
     }
 
+
+
     private fun showNfcDialog(){
         alert(false, getString(R.string.go_to_setting),null,getString(R.string.nfc_off),getString(R.string.nfc_off_desc),{ dialog ->
             startActivity(Intent(android.provider.Settings.ACTION_WIRELESS_SETTINGS))
             dialog.dismiss()
         },{},{})
 
+    }
+
+
+    fun observeDataChanges(){
+        viewModel?.activitySocketResponse?.observe(this, Observer {
+            when(it.action){
+                    SocketActionType.MESSAGE_SENDED.type->{
+                        when(viewModel?.nfcStatusType){
+                            NfcStatusType.AVAILABLE->{
+                                showOcrFragment()
+                            }
+                            NfcStatusType.NOT_AVAILABLE->{
+                                showCallWaitingFragment()
+                            }
+                            else -> {
+                                 showCallWaitingFragment()
+                            }
+                        }
+                    }
+                }
+
+        })
+
+        viewModel?.activityFailure?.observe(this, Observer {
+            if (it){
+                Toasty.error(this,getString(R.string.reason_socket_connection),Toasty.LENGTH_SHORT).show()
+            }
+        })
+
+
+        val connectionLiveData = ConnectionLiveData(this)
+        connectionLiveData.observe(this, Observer { isConnected ->
+            isConnected?.let {
+                isNetworkAvailable(it)
+            }
+        })
     }
 
 
@@ -267,9 +380,16 @@ class IdentifyActivity : AppCompatActivity(),
         }
     }
 
-    private fun checkNfcExisting(itsOnDevice : () -> Unit, notOnDevice : () -> Unit ){
+
+    private fun checkNfcExisting(){
         setNfcAdapter()
-        if (adapter == null) notOnDevice() else itsOnDevice()
+        if (adapter == null){
+            viewModel?.nfcStatusType = NfcStatusType.NOT_AVAILABLE
+            viewModel?.connectSocket(true,NfcStatusType.NOT_AVAILABLE)
+        }  else{
+            viewModel?.nfcStatusType = NfcStatusType.AVAILABLE
+            viewModel?.connectSocket(true,NfcStatusType.AVAILABLE)
+        }
     }
 
     @OnShowRationale(Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO)
@@ -305,27 +425,6 @@ class IdentifyActivity : AppCompatActivity(),
     }
 
 
-    override fun onStop() {
-        super.onStop()
-        removeCallingFragment()
-        removeStartedCallFragment()
-    }
-
-
-    override fun onPause() {
-        super.onPause()
-        clearNfcReader()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        supportFragmentManager.findFragmentByTag(NfcFragment::class.java.toString())?.let { fragment ->
-            if (fragment.isVisible) {
-                startNfcReader()
-            }
-        }
-    }
-
 
 
 
@@ -349,9 +448,30 @@ class IdentifyActivity : AppCompatActivity(),
         clearNetworkDialog()
     }
 
+    override fun onPause() {
+        super.onPause()
+        IdentifySdk.getInstance().setSdkLifeCycle(SdkLifeCycleType.PAUSED)
+        clearNfcReader()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        supportFragmentManager.findFragmentByTag(NfcFragment::class.java.toString())?.let { fragment ->
+            if (fragment.isVisible) {
+                startNfcReader()
+            }
+        }
+        IdentifySdk.getInstance().setSdkLifeCycle(SdkLifeCycleType.RESUMED)
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         clearNetworkDialog()
+        clearNfcReader()
+        destroy()
+        viewModel?.disconnectSocket()
+        IdentifySdk.getInstance().setSdkLifeCycle(SdkLifeCycleType.DESTROYED)
+        IdentifySdk.getInstance().sdkDestroyed()
     }
 
     fun clearNetworkDialog(){
@@ -363,9 +483,7 @@ class IdentifyActivity : AppCompatActivity(),
 
 
     override fun onOpenWaitFragment() {
-        customerInformationEntity?.let {
-            showCallWaitingFragment(it)
-        }
+            showCallWaitingFragment()
     }
 
 
@@ -388,24 +506,60 @@ class IdentifyActivity : AppCompatActivity(),
     }
 
     override fun onOpenNfcFragment(mrzInfo: MRZInfo) {
-        customerInformationEntity?.let { showNfcFragment(mrzInfo, it) }
+        viewModel?.customerInformationEntity?.let { showNfcFragment(mrzInfo, it) }
     }
 
     override fun onRemoveNfcFragment() {
         removeNfcFragment()
     }
 
+    override fun onOpenOcrFragment() {
+        showOcrFragment()
+    }
+
     override fun onRemoveOcrFragment() {
         removeOcrFragment()
     }
 
+    override fun onRemoveFaceDetectionFragment() {
+        removeFaceDetectionFragment()
+    }
+
+    override fun onOpenFaceDetectionFragment() {
+       showFaceDetectionFragment()
+    }
+
+    override fun onOpenThankYouFragment() {
+        showThankYouFragment()
+    }
+
+    override fun onRemoveThankYouFragment() {
+       removeThankYouFragment()
+    }
+
+    override fun onRemoveWaitFragment() {
+        removeCallWaitingFragment()
+    }
+
     override fun onSuccess() {
         removeWebViewFormFragment()
-        customerInformationEntity?.let { showCallWaitingFragment(it) }
+        showCallWaitingFragment()
     }
 
     override fun onFailure() {
 
+    }
+
+    override fun nfcProcessFinished(isSuccess : Boolean, mrzDto: MrzDto?) {
+        IdentifySdk.getInstance().resultCallback(Pair(IdentityResultType.NFC,mrzDto))
+    }
+
+    override fun vitalityDetectionProcessFinished() {
+        IdentifySdk.getInstance().resultCallback(Pair(IdentityResultType.FACE,null))
+    }
+
+    override fun callProcessFinished() {
+        IdentifySdk.getInstance().resultCallback(Pair(IdentityResultType.CALL,null))
     }
 
 

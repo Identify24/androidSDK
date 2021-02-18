@@ -10,5 +10,11 @@ interface OnFragmentTransactionListener {
     fun onRemoveStartedCallFragment()
     fun onOpenNfcFragment(mrzInfo: MRZInfo)
     fun onRemoveNfcFragment()
+    fun onOpenOcrFragment()
     fun onRemoveOcrFragment()
+    fun onRemoveFaceDetectionFragment()
+    fun onOpenFaceDetectionFragment()
+    fun onOpenThankYouFragment()
+    fun onRemoveThankYouFragment()
+    fun onRemoveWaitFragment()
 }

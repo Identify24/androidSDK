@@ -1,5 +1,6 @@
 package com.identify.sdk.webrtc.started
 
+import android.animation.Animator
 import android.content.Context
 import android.content.DialogInterface
 import android.content.pm.PackageManager
@@ -7,6 +8,7 @@ import android.hardware.Camera
 import android.hardware.camera2.CameraManager
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
 import android.view.KeyEvent
 import android.view.View
 import android.view.WindowManager
@@ -48,6 +50,10 @@ class StartedCallFragment : BaseFragment()    {
     private var rootEglBase: EglBase ?= null
 
     var mBottomSheetDialog : BottomSheetDialog ? = null
+
+    var handler : Handler ?= null
+
+    var runnable : Runnable ?= null
 
     var mBehavior : BottomSheetBehavior<View> ? = null
 
@@ -91,14 +97,28 @@ class StartedCallFragment : BaseFragment()    {
         }
 
         disconnectButton.setOnClickListener {
-            onFragmentTransactionListener?.onRemoveStartedCallFragment()
+           //goCallWaitFragmentFromFail()
         }
 
 
         onBackPressClicked()
 
+        checkConnectionTimeOut()
 
 
+    }
+
+    private fun checkConnectionTimeOut() {
+        handler = Handler()
+        runnable = Runnable {
+            if (!viewModel.callStarted){
+                viewModel.finishCall()
+                viewModel.handlerWorked = true
+                Toasty.error(requireContext(),getString(R.string.connection_error_when_calling),Toasty.LENGTH_LONG).show()
+                goCallWaitFragmentFromFail()
+            }
+        }
+        handler?.postDelayed(runnable, 10000)
     }
 
 
@@ -128,20 +148,22 @@ class StartedCallFragment : BaseFragment()    {
         surfaceViewRendererRemote.setMirror(false)
         surfaceViewRendererRemote.setScalingType(RendererCommon.ScalingType.SCALE_ASPECT_FILL)
     }
-
+/*
     override fun onStop() {
         super.onStop()
-        mBottomSheetDialog?.let {
-            mBottomSheetDialog?.dismiss()
-        }
-        viewModel.closeStream()
-        surfaceViewRendererLocal.release()
-        surfaceViewRendererRemote.release()
-        rootEglBase?.release()
-        rootEglBase = null
+
+    }*/
+
+
+    private fun goThankYouFragment(){
+        onFragmentTransactionListener?.onOpenThankYouFragment()
+        onFragmentTransactionListener?.onRemoveStartedCallFragment()
     }
 
-
+    private fun goCallWaitFragmentFromFail(){
+        onFragmentTransactionListener?.onOpenWaitFragment()
+        onFragmentTransactionListener?.onRemoveStartedCallFragment()
+    }
 
 
 
@@ -149,25 +171,13 @@ class StartedCallFragment : BaseFragment()    {
         observe(viewModel.successData){
             when(it.action){
                 SocketActionType.TERMINATE_CALL.type->{
-                    onFragmentTransactionListener?.onRemoveStartedCallFragment()
-                }
-                SocketActionType.IM_ONLINE.type -> {
-                    // Toast.makeText(context,getString(R.string.customer_service_online), Toast.LENGTH_LONG).show()
-                }
-                SocketActionType.IM_OFFLINE.type -> {
-                    onFragmentTransactionListener?.onRemoveStartedCallFragment()
-                    // Toast.makeText(context,getString(R.string.customer_service_offline), Toast.LENGTH_LONG).show()
-                }
-                SocketActionType.END_CALL.type->{
-                    onFragmentTransactionListener?.onRemoveStartedCallFragment()
-                }
-                SocketActionType.SUBREJECTED.type->{
-                    onFragmentTransactionListener?.onRemoveStartedCallFragment()
+                  if (viewModel.callStarted) goThankYouFragment()
                 }
                 SocketActionType.SDP.type->{
 
                 }
                 SdpType.ANSWER.type->{
+                    viewModel.callStarted = true
                     relLayCallWaiting.visibility = View.GONE
                     surfaceViewRendererRemote.visibility = View.VISIBLE
                     surfaceViewRendererLocal.visibility = View.VISIBLE
@@ -184,6 +194,63 @@ class StartedCallFragment : BaseFragment()    {
                 }
                 SocketActionType.TOGGLEFlASH.type->{
                 //    switchFlash()
+                }
+                SocketActionType.ID_GUIDE_ON.type->{
+                    imgIdCard.visibility = View.VISIBLE
+                    viewModel.toogleIdGuideStatusChanged(true)
+                }
+                SocketActionType.ID_GUIDE_OFF.type->{
+                    imgIdCard.visibility = View.GONE
+                    idLoadingAnimation.visibility =   View.VISIBLE
+                    idLoadingAnimation.setAnimation(R.raw.nfc_success)
+                    idLoadingAnimation.repeatCount = 0
+                    idLoadingAnimation.playAnimation()
+                    idLoadingAnimation.addAnimatorListener(object : Animator.AnimatorListener{
+                        override fun onAnimationRepeat(p0: Animator?) {
+                        }
+
+                        override fun onAnimationEnd(p0: Animator?) {
+                            viewModel.toogleIdGuideStatusChanged(false)
+                            idLoadingAnimation.progress = 0f
+                            idLoadingAnimation.visibility = View.GONE
+                        }
+
+                        override fun onAnimationCancel(p0: Animator?) {
+                        }
+
+                        override fun onAnimationStart(p0: Animator?) {
+
+                        }
+
+                    })
+                }
+                SocketActionType.FACE_GUIDE_ON.type->{
+                    faceLoadingAnimation.visibility = View.VISIBLE
+                    viewModel.toogleFaceGuideStatusChanged(true)
+                }
+                SocketActionType.FACE_GUIDE_OFF.type->{
+                    faceLoadingAnimation.setAnimation(R.raw.face)
+                    faceLoadingAnimation.repeatCount = 0
+                    faceLoadingAnimation.playAnimation()
+                    faceLoadingAnimation.addAnimatorListener(object : Animator.AnimatorListener{
+                        override fun onAnimationRepeat(p0: Animator?) {
+                        }
+
+                        override fun onAnimationEnd(p0: Animator?) {
+                            viewModel.toogleFaceGuideStatusChanged(false)
+                            faceLoadingAnimation.progress = 0f
+                            faceLoadingAnimation.visibility = View.GONE
+                        }
+
+                        override fun onAnimationCancel(p0: Animator?) {
+                        }
+
+                        override fun onAnimationStart(p0: Animator?) {
+
+                        }
+
+                    })
+
                 }
             }
         }
@@ -239,7 +306,7 @@ class StartedCallFragment : BaseFragment()    {
 
     fun errorProccess(){
         Toasty.error(requireContext(),getString(R.string.connection_error_when_calling),Toast.LENGTH_LONG).show()
-        onFragmentTransactionListener?.onRemoveStartedCallFragment()
+        goCallWaitFragmentFromFail()
     }
 
 
@@ -252,6 +319,26 @@ class StartedCallFragment : BaseFragment()    {
         }
     }
 
+
+
+    override fun onPause() {
+        super.onPause()
+        handler?.removeCallbacks(runnable)
+        handler = null
+        runnable = null
+        mBottomSheetDialog?.let {
+            mBottomSheetDialog?.dismiss()
+        }
+        viewModel.closeStream()
+        surfaceViewRendererLocal.release()
+        surfaceViewRendererRemote.release()
+        rootEglBase?.release()
+        rootEglBase = null
+       if (!viewModel.handlerWorked){
+           viewModel.finishCall()
+           goCallWaitFragmentFromFail()
+       }
+    }
 
 
     override fun onDetach() {

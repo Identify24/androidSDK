@@ -20,7 +20,7 @@
     <string name="reason_generic">Hata oluştu!</string>
     <string name="reason_response">Ahh, bağlantı hatası!</string>
     <string name="reason_timeout">Süre aşımı!</string>
-    <string name="reason_socket_connection">İnternet bağlantısı yeterli değil. Lütfen tekrar deneyiniz…</string>
+    <string name="reason_socket_connection">İnternet bağlantısı yok. Lütfen tekrar deneyiniz…</string>
     <string name="reason_persistance_empty">Mevcut veri yok!</string>
     <string name="reason_no_network_persistance_empty">Veri veya bağlantı yok!</string>
     <string name="nfc_toast_message">Lütfen NFC okutmayı tekrar deneyiniz…</string>
@@ -49,4 +49,13 @@
     <string name="enter_pin_description">Lütfen SMS-Opt giriniz.</string>
     <string name="confirm">Onay</string>
     <string name="are_you_sure_title">Bekleme odasından çıktığınızda müşteri temsilcisi sizi arayamıyacak. Emin misiniz ?</string>
+    <string name="nfc_error_count_title">Nfc Veri Okuma Sayacı Hatası</string>
+    <string name="nfc_error_count_desc">Maksimum nfc okuma hatası sayısına ulaştınız. Müşteri temsilcisi ile devam edin.</string>
+    <string name="nfc_error_count_btn">Devam Et</string>
+    <string name="smiling_text">GÜÇLÜ BİR GÜLÜMSEME İLE DEVAM EDEBİLİRSİNİZ.</string>
+    <string name="blink_text">CANLILIĞI TESPİT ETMEK İÇİN GÖZ KIRPMALISINIZ..</string>
+    <string name="redirect_to_customer_services">MÜŞTERİ TEMSİLCİSİNE YÖNLENDİRİLİYORSUNUZ...</string>
+    <string name="finish_process">KİMLİK DOĞRULAMAYI TAMAMLADINIZ, TEŞEKKÜRLER...</string>
+    <string name="turn_your_head_right_text">CANLILIĞI ALGILAMAK İÇİN BAŞINIZI 45 DERECE SAĞA DÖNDÜRMELİSİNİZ.</string>
+    <string name="turn_your_head_left_text">SON OLARAK CANLILIĞI ALGILAMAK İÇİN BAŞINIZI 45 DERECE SOLA DÖNDÜRMELİSİNİZ.</string>
 </resources>

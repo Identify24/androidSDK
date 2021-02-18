@@ -712,4 +712,3 @@ public class CameraSource {
         graphicOverlay.clear();
     }
 }
-

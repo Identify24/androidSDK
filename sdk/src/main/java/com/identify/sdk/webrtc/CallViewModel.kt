@@ -9,8 +9,10 @@ import com.identify.sdk.repository.model.CustomerInformationEntity
 import com.identify.sdk.repository.model.SocketActionType
 import com.identify.sdk.repository.model.dto.TanDto
 import com.identify.sdk.repository.model.entities.TanEntity
+import com.identify.sdk.repository.model.enums.NfcStatusType
 import com.identify.sdk.repository.model.enums.SdpType
 import com.identify.sdk.repository.model.enums.SocketConnectionStatus
+import com.identify.sdk.repository.model.enums.ToogleType
 import com.identify.sdk.repository.model.socket.*
 import com.identify.sdk.repository.network.Api
 import com.identify.sdk.repository.network.ApiImpl
@@ -40,6 +42,14 @@ class CallViewModel  : BaseViewModel<SocketResponse>() {
 
     val socketStatus = MutableLiveData<SocketConnectionStatus>()
 
+    val activitySocketResponse = MutableLiveData<SocketResponse>()
+
+    var nfcStatusType : NfcStatusType ?= null
+    var activityFailure = MutableLiveData<Boolean>()
+
+    var callStarted  = false
+    var handlerWorked = false
+
     private var currentCamera = CAMERA_FRONT
 
 
@@ -64,7 +74,7 @@ class CallViewModel  : BaseViewModel<SocketResponse>() {
     }
 
 
-     fun connectSocket() {
+     fun connectSocket(isComingNfc : Boolean,nfcStatusType : NfcStatusType ) {
          viewModelScope.launch {
              socketSource.ifExistSocketConnection()
              socketSource.socketEvent().collect {
@@ -72,12 +82,39 @@ class CallViewModel  : BaseViewModel<SocketResponse>() {
                      is Success ->{
                          when(it.successData.action){
                              SocketConnectionStatus.OPEN.type -> {
-                                 val resp = sendNewSubscribe()
-                                 resp.onSuccess {
-                                     handleSuccess(it)
-                                 }
-                                 resp.onFailure {
-                                     handleFailure(it)
+                                 when(isComingNfc){
+                                     true->{
+                                         val resp = sendNfcSubscribe(isComingNfc)
+                                         when(resp){
+                                             is Success->{
+                                                 if ( nfcStatusType == NfcStatusType.NOT_AVAILABLE) {
+                                                     sendNfcStatus(nfcStatusType)
+                                                         .onSuccess { response -> 
+                                                             handleActivitySuccess(response)
+                                                         }
+                                                         .onFailure { handleActivityFailure() }
+                                                 }
+                                                 else {
+                                                     resp.onSuccess { response->
+                                                        handleActivitySuccess(response)
+                                                     }
+                                                     resp.onFailure {
+                                                         handleActivityFailure()
+                                                     }
+                                                 }
+                                             }
+                                             is Failure->{
+                                                 handleActivityFailure()
+                                             }
+                                         }
+
+                                     }
+                                     false->{
+                                         val resp = sendNfcSubscribe(isComingNfc)
+                                         resp.onSuccess {response -> 
+                                             handleActivitySuccess(response) }
+                                         resp.onFailure {handleActivityFailure() }
+                                     }
                                  }
                              }
                              SocketActionType.NEW_SUBSCRIBE.type->{
@@ -110,6 +147,13 @@ class CallViewModel  : BaseViewModel<SocketResponse>() {
          }
      }
 
+    fun handleActivityFailure(){
+        activityFailure.value = true
+    }
+    fun handleActivitySuccess(socketResponse: SocketResponse){
+        activitySocketResponse.value = socketResponse
+    }
+    
     fun disconnectSocket(){
         closeSocketStream()
     }
@@ -139,12 +183,39 @@ class CallViewModel  : BaseViewModel<SocketResponse>() {
         return Failure(AuthenticationError())
     }
 
+    fun sendNfcStatus(nfcStatusType: NfcStatusType) : Result<SocketResponse> {
+        customerInformationEntity?.customerUid?.let { id ->
+            return socketSource.sendNfcStatusType(NfcStatus(status = nfcStatusType.type,room = id))!!
+        }
+        return Failure(AuthenticationError())
+    }
+
+    fun sendNfcSubscribe(isComingNfc: Boolean) : Result<SocketResponse> {
+        customerInformationEntity?.customerUid?.let { id ->
+            return socketSource.sendSubscribe(if (isComingNfc)SocketSubscribe(location = "NFCCheck",room = id) else SocketSubscribe(room = id))!!
+        }
+        return Failure(AuthenticationError())
+    }
+
     fun sendImOnline(): Result<SocketResponse> {
         customerInformationEntity?.customerUid?.let { id ->
             return socketSource.sendImOnline(ImOnline(room = id))!!
         }
         return Failure(AuthenticationError())
     }
+
+
+    fun finishCall(){
+        customerInformationEntity?.customerUid?.let { room->
+            viewModelScope.launch {
+                socketSource.sendFinishCall(CallRejected(room = room))
+                    ?.handle(::handleState, ::handleFailure, ::handleSuccess)
+            }
+        }
+    }
+
+
+
 
     fun startRtcProccessing(){
         viewModelScope.launch {
@@ -156,9 +227,42 @@ class CallViewModel  : BaseViewModel<SocketResponse>() {
 
     }
 
+    fun toogleIdGuideStatusChanged(result: Boolean) {
+        customerInformationEntity?.customerUid?.let { room ->
+            viewModelScope.launch {
+                socketSource.sendToogleStatus(
+                        ResultToogle(
+                                action = ToogleType.TOOGLE_ID_GUIDE.type,
+                                result = result,
+                                room = room
+                        )
+                )?.onFailure {
+                    handleFailure(it)
+                }
+            }
+        }
+    }
+
     fun switchCamera(){
         rtcConnectionSource.switchCamera()
         currentCamera = if (currentCamera == CAMERA_FRONT) CAMERA_BACK else CAMERA_FRONT
+    }
+
+    fun toogleFaceGuideStatusChanged(result: Boolean){
+        customerInformationEntity?.customerUid?.let { room ->
+            viewModelScope.launch {
+                socketSource.sendToogleStatus(
+                        ResultToogle(
+                                action = ToogleType.TOOGLE_FACE_GUIDE.type,
+                                result = result,
+                                room = room
+                        )
+                )?.onFailure {
+                    handleFailure(it)
+                }
+            }
+        }
+
     }
 
     fun closeStream() {

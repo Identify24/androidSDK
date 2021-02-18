@@ -16,6 +16,11 @@ enum class SocketActionType(val type : String) {
     REQUEST_TAN("requestTan"),
     TOGGLECAMERA("toggleCamera"),
     SUBREJECTED("subRejected"),
+    FACE_GUIDE_ON("faceGuideOn"),
+    FACE_GUIDE_OFF("faceGuideOff"),
+    ID_GUIDE_ON("idGuideOn"),
+    ID_GUIDE_OFF("idGuideOff"),
+    SKIPNFC("skipNFC"),
     TOGGLEFlASH("toggleFlash");
 
 

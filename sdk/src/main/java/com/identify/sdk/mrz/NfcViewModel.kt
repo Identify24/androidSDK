@@ -9,17 +9,20 @@ import com.identify.sdk.base.*
 import com.identify.sdk.repository.model.BaseApiResponse
 import com.identify.sdk.repository.model.CustomerInformationEntity
 import com.identify.sdk.repository.model.dto.MrzDto
-import com.identify.sdk.repository.model.dto.TanDto
-import com.identify.sdk.repository.model.entities.TanEntity
+import com.identify.sdk.repository.model.enums.NfcStatusType
 import com.identify.sdk.repository.model.mrz.AdditionalPersonDetails
 import com.identify.sdk.repository.model.mrz.DocType
 import com.identify.sdk.repository.model.mrz.EDocument
 import com.identify.sdk.repository.model.mrz.PersonDetails
+import com.identify.sdk.repository.model.socket.NfcStatus
+import com.identify.sdk.repository.model.socket.SocketResponse
 import com.identify.sdk.repository.network.ApiImpl
+import com.identify.sdk.repository.soket.SocketSource
 import com.identify.sdk.util.DateUtil
 import com.identify.sdk.util.Image
 import com.identify.sdk.util.ImageUtil
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import net.sf.scuba.smartcards.CardFileInputStream
@@ -35,7 +38,6 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.util.*
-import javax.inject.Inject
 
 class NfcViewModel  : BaseViewModel<CustomerInformationEntity?>()  {
 
@@ -45,8 +47,12 @@ class NfcViewModel  : BaseViewModel<CustomerInformationEntity?>()  {
     var personDetails: PersonDetails = PersonDetails()
     var additionalPersonDetails: AdditionalPersonDetails = AdditionalPersonDetails()
     var mrzInfo : MRZInfo ?= null
+    var mrzDto : MrzDto ?= null
     var customer : CustomerInformationEntity ?= null
+    var socketResponse = MutableLiveData<SocketResponse>()
     private var context : Context ?= null
+    var nfcExceptionCounter = 0
+    var nfcStatusType : NfcStatusType ?= null
 
     val nfcApiResult = MutableLiveData<Boolean>()
 
@@ -54,12 +60,29 @@ class NfcViewModel  : BaseViewModel<CustomerInformationEntity?>()  {
         ApiImpl()
     }
 
+    var socketSource : SocketSource = SocketSource.getInstance()
 
 
-    fun initSources(context: Context){
-        this.context = context
+    @ExperimentalCoroutinesApi
+    fun nfcStatusSendFromSocket(nfcStatus: NfcStatusType){
+        viewModelScope.launch {
+            sendNfcStatus(nfcStatus)
+                .onSuccess {
+                    socketResponse.value =  it
+                }.onFailure {
+                    handleMrzError(it)
+                }
+        }
+
     }
 
+
+    fun sendNfcStatus(nfcStatusType: NfcStatusType) : Result<SocketResponse> {
+        customer?.customerUid?.let { id ->
+            return socketSource.sendNfcStatusType(NfcStatus(status = nfcStatusType.type,room = id))!!
+        }
+        return Failure(AuthenticationError())
+    }
 
     fun getNfcData(isoDep : IsoDep, bacKey : BACKeySpec){
       viewModelScope.launch {
@@ -243,13 +266,14 @@ class NfcViewModel  : BaseViewModel<CustomerInformationEntity?>()  {
         viewModelScope.launch {
 
             handleState(State.Loading())
-            apiImpl.service.setMrzData(MrzDto(eDocument.personDetails?.issuerAuthority,eDocument.personDetails?.birthDate,eDocument.docType?.name,eDocument.personDetails?.expiryDate,eDocument.personDetails?.gender,customer?.formUid,eDocument.personDetails?.name,eDocument.personDetails?.nationality,eDocument.personDetails?.personalNumber,eDocument.personDetails?.serialNumber,eDocument.personDetails?.surname,eDocument.personDetails?.faceImageBase64))?.enqueue( object :
+            mrzDto = MrzDto(eDocument.personDetails?.issuerAuthority,eDocument.personDetails?.birthDate,eDocument.docType?.name,eDocument.personDetails?.expiryDate,eDocument.personDetails?.gender,customer?.formUid,eDocument.personDetails?.name,eDocument.personDetails?.nationality,eDocument.personDetails?.personalNumber,eDocument.personDetails?.serialNumber,eDocument.personDetails?.surname,eDocument.personDetails?.faceImageBase64)
+            apiImpl.service.setMrzData(mrzDto!!).enqueue( object :
                 Callback<BaseApiResponse<CustomerInformationEntity?>> {
                 override fun onFailure(
                     call: Call<BaseApiResponse<CustomerInformationEntity?>>,
                     t: Throwable
                 ) {
-                    t.message?.let { handleFailure(ResponseError()) }
+                    t.message?.let { handleMrzError(ResponseError()) }
                     handleState(State.Loaded())
                 }
 
@@ -262,9 +286,8 @@ class NfcViewModel  : BaseViewModel<CustomerInformationEntity?>()  {
                             nfcApiResult.value = it
                         }
                     }else{
-                        if (response.body()?.messages?.get(0).isNullOrEmpty()) handleFailure(
-                            ResponseError()
-                        ) else handleFailure(ApiError(response.body()?.messages))
+                        if (response.body()?.messages?.get(0).isNullOrEmpty()) handleMrzError(ResponseError())
+                        else handleMrzError(ApiError(response.body()?.messages))
 
                     }
                     handleState(State.Loaded())
