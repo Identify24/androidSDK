@@ -48,7 +48,7 @@ class CallViewModel  : BaseViewModel<SocketResponse>() {
     var activityFailure = MutableLiveData<Boolean>()
 
     var callStarted  = false
-    var handlerWorked = false
+    var goThankYouFragment = false
 
     private var currentCamera = CAMERA_FRONT
 

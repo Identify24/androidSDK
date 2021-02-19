@@ -26,7 +26,7 @@
 	<string name="nfc_reading">NFC-Karte wird gelesen. Bitte bewegen Sie die Karte nicht.</string>
 	<string name="nfc_try_again">NFC-Daten konnten nicht gelesen werden. Bitte versuchen Sie es erneut mit der NFC-Karte.</string>
 	<string name="nfc_success">NFC-Daten erfolgreich gelesen. Sie werden zum identify-Agent weitergeleitet.</string>
-	<string name="app_name">WebRtc</string>
+	<string name="app_name">Kimlik Basit</string>
 	<string name="pls_wait_for_calling">Sie befinden sich derzeit im Wartebereich für Ihre Videoidentifikation</string>
 	<string name="receiving_a_call">Identify ruft an...</string>
 	<string name="customer_service_online">Kundenservice online</string>

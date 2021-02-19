@@ -13,8 +13,8 @@ class MainActivity : AppCompatActivity() {
 
 
         val options = IdentityOptions.Builder()
-            .setIdentityType(IdentityType.ONLY_CALL) // Default value IdentityType.FULL_PROCESS
-            .setNfcExceptionCount(5) // Default value 3
+            .setIdentityType(IdentityType.FULL_PROCESS)
+            .setNfcExceptionCount(3)
             .build()
 
         val identifyObject = IdentifySdk.Builder()

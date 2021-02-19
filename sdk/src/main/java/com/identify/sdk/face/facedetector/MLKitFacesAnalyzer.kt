@@ -14,8 +14,8 @@ import com.google.mlkit.vision.face.FaceDetector
 
 class MLKitFacesAnalyzer internal constructor(
     private val faceDetector: FaceDetector,
-    private val tv : PreviewView,
-    private val iv : ImageView
+ /*   private val tv : PreviewView,
+    private val iv : ImageView*/
 ) : ImageAnalysis.Analyzer {
     private var bitmap: Bitmap? = null
     private var canvas: Canvas? = null
@@ -35,9 +35,8 @@ class MLKitFacesAnalyzer internal constructor(
         val mediaImage = image.image
         if (mediaImage != null) {
            fbImage = InputImage.fromMediaImage(mediaImage, image.imageInfo.rotationDegrees)
-
         }
-        initDrawingUtils()
+        //initDrawingUtils()
         detectFaces(image)
 
     }
@@ -45,7 +44,7 @@ class MLKitFacesAnalyzer internal constructor(
 
 
 
-    private fun initDrawingUtils() {
+/*    private fun initDrawingUtils() {
         bitmap = Bitmap.createBitmap(
             tv.width,
             tv.height,
@@ -61,32 +60,27 @@ class MLKitFacesAnalyzer internal constructor(
         linePaint!!.color = Color.GREEN
         linePaint!!.style = Paint.Style.STROKE
         linePaint!!.strokeWidth = 2f
-        widthScaleFactor = 1f
-        heightScaleFactor = 0.97f
-    }
+        widthScaleFactor = (canvas?.width!!).toFloat() / (tv.width).toFloat()
+        heightScaleFactor = (canvas?.height!!).toFloat() / (tv.height).toFloat()
+    }*/
 
 
     private fun detectFaces(image: ImageProxy) {
         faceDetector.process(fbImage)
             .addOnSuccessListener { firebaseVisionFaces ->
                 if (firebaseVisionFaces.isNotEmpty()) {
-                    processFaces(firebaseVisionFaces)
+                 //   processFaces(firebaseVisionFaces)
                     faceProcessorListener?.success(firebaseVisionFaces)
-                } else {
+                } /*else {
                     iv.setImageDrawable(null);
-                }
-            }.addOnFailureListener { e ->
-                Log.i(
-                    TAG,
-                    e.toString()
-                )
+                }*/
             }
             .addOnCompleteListener {
                 image.close()
             }
     }
 
-    private fun processFaces(faces: List<Face>) {
+  /*  private fun processFaces(faces: List<Face>) {
         for (face in faces) {
             face.getContour(FaceContour.FACE)?.let {
                 drawContours(it.points)
@@ -130,9 +124,9 @@ class MLKitFacesAnalyzer internal constructor(
 
         }
         iv.setImageBitmap(bitmap)
-    }
+    }*/
 
-    private fun drawContours(points: List<PointF>) {
+/*    private fun drawContours(points: List<PointF>) {
         var counter = 0
         for (point in points) {
             if (counter != points.size - 1) {
@@ -158,9 +152,9 @@ class MLKitFacesAnalyzer internal constructor(
                 dotPaint!!
             )
         }
-    }
+    }*/
 
-    private fun translateY(y: Float): Float {
+  /*  private fun translateY(y: Float): Float {
         return y * heightScaleFactor
     }
 
@@ -168,13 +162,9 @@ class MLKitFacesAnalyzer internal constructor(
         val scaledX = x * widthScaleFactor
         return canvas?.width!! - scaledX
 
-    }
+    }*/
 
 
-
-    companion object {
-        private const val TAG = "MLKitFacesAnalyzer"
-    }
 
 
 }

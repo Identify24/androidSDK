@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </RelativeLayout>
+<!--    <FrameLayout
+        android:id="@+id/frameSlider"
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+       >
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:clipToPadding="false"
+        android:clipChildren="false"
+        android:id="@+id/viewpager"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"
+        android:layout_marginBottom="40dp"
+        android:layout_gravity="bottom|center_horizontal"
+        android:background="@drawable/indicator_rectangle"
+        android:alpha="0.6"
+        app:tabBackground="@drawable/tab_selector"
+        app:tabIndicatorHeight="0dp" />
+    </FrameLayout>-->
+
+</androidx.constraintlayout.widget.ConstraintLayout>

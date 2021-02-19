@@ -63,6 +63,7 @@ class IdentifyActivity : AppCompatActivity(),
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON) // close screen saver
         viewModel = ViewModelProvider(this).get(CallViewModel::class.java)
         intent.getStringExtra("language").let {
             setLocale(it,baseContext)

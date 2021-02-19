@@ -131,7 +131,7 @@ class FaceDetectionFragment : BaseFragment(),
                     .setTargetResolution(Size(preview_view.width, preview_view.height))
                     .build()
                     .also {
-                        faceAnalysis =  MLKitFacesAnalyzer(detector,preview_view,face_image_view)
+                        faceAnalysis =  MLKitFacesAnalyzer(detector/*,preview_view,face_image_view*/)
                         faceAnalysis?.let { analysis ->
                             startFaceCallback(analysis)
                             it.setAnalyzer(cameraExecutor,analysis)

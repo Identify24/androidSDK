@@ -113,7 +113,6 @@ class StartedCallFragment : BaseFragment()    {
         runnable = Runnable {
             if (!viewModel.callStarted){
                 viewModel.finishCall()
-                viewModel.handlerWorked = true
                 Toasty.error(requireContext(),getString(R.string.connection_error_when_calling),Toasty.LENGTH_LONG).show()
                 goCallWaitFragmentFromFail()
             }
@@ -156,6 +155,7 @@ class StartedCallFragment : BaseFragment()    {
 
 
     private fun goThankYouFragment(){
+        viewModel.goThankYouFragment = true
         onFragmentTransactionListener?.onOpenThankYouFragment()
         onFragmentTransactionListener?.onRemoveStartedCallFragment()
     }
@@ -334,7 +334,7 @@ class StartedCallFragment : BaseFragment()    {
         surfaceViewRendererRemote.release()
         rootEglBase?.release()
         rootEglBase = null
-       if (!viewModel.handlerWorked){
+       if (viewModel.callStarted && !viewModel.goThankYouFragment){
            viewModel.finishCall()
            goCallWaitFragmentFromFail()
        }

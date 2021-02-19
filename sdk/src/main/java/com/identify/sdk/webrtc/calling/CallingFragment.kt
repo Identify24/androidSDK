@@ -64,7 +64,7 @@ class CallingFragment : BaseFragment()   {
 
     private fun setCallStartedFragmentDefaultArgument() {
         viewModel.callStarted = false
-        viewModel.handlerWorked = false
+        viewModel.goThankYouFragment = false
     }
 
     private fun onBackPressClicked(){
