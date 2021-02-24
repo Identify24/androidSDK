@@ -16,7 +16,7 @@ Add it in your root build.gradle at the end of repositories:
 	
 Step 2. Add the dependency
 
-<pre>implementation 'com.github.Identify24:androidSDK:2.3.0'</pre>
+<pre>implementation 'com.github.Identify24:androidSDK:2.3.1'</pre>
 
 # Usage
 
@@ -27,6 +27,7 @@ Firstly, you have to create options for sdk.Then get a singleton object by set t
    val options = IdentityOptions.Builder()
             .setIdentityType(IdentityType.ONLY_CALL) // Default value IdentityType.FULL_PROCESS
             .setNfcExceptionCount(5) // Default value 3
+	    .setOpenIntroPage(false) // Default true
             .build()
 
   val identifyObject = IdentifySdk.Builder()
@@ -49,6 +50,7 @@ Firstly, you have to create options for sdk.Then get a singleton object by set t
   IdentityOptions options = new IdentityOptions.Builder()
                 .setIdentityType(IdentityType.ONLY_CALL) // Default value IdentityType.FULL_PROCESS
                 .setNfcExceptionCount(5) // Default value 3
+		.setOpenIntroPage(false) // Default true
                 .build();
 
  IdentifySdk identifyObject = new IdentifySdk.Builder()
