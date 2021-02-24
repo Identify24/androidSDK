@@ -32,8 +32,10 @@
     <string name="nfc_reading">NFC okunuyor. Lütfen kimlik kartını hareket ettirmeyiniz.</string>
     <string name="nfc_try_again">NFC verileri okunamadı. Lütfen tekrar deneyiniz.</string>
     <string name="nfc_success">NFC okutma başarılı! Müşteri temsilcisine bağlanıyor!</string>
-    <string name="pls_wait_for_calling">Bekleme alanındasınız.</string>
-    <string name="receiving_a_call">Identify arıyor…</string>
+    <string name="pls_wait_for_calling">Müşteri temsilcimiz sizi aramak üzere lütfen bu ekranda bekleyiniz.</string>
+    <string name="wait_with_id">Kimliğinizin yanınızda ve hazır olduğundan emin olunuz.</string>
+    <string name="receiving_a_call">Müşteri temsilcimiz arıyor...</string>
+    <string name="calling_description">Video görüşmeyi başlatmak için lütfen cevaplayınız.</string>
     <string name="customer_service_online">Müşteri hizmetleri hazır.</string>
     <string name="customer_service_offline"> Müşteri hizmetleri hazır değil. </string>
     <string name="desc_toggle_microphone">Mikrofon Aç-Kapat</string>
@@ -51,11 +53,27 @@
     <string name="are_you_sure_title">Bekleme odasından çıktığınızda müşteri temsilcisi sizi arayamıyacak. Emin misiniz ?</string>
     <string name="nfc_error_count_title">Nfc Veri Okuma Sayacı Hatası</string>
     <string name="nfc_error_count_desc">Maksimum nfc okuma hatası sayısına ulaştınız. Müşteri temsilcisi ile devam edin.</string>
-    <string name="nfc_error_count_btn">Devam Et</string>
+    <string name="go_on">Devam Et</string>
     <string name="smiling_text">GÜÇLÜ BİR GÜLÜMSEME İLE DEVAM EDEBİLİRSİNİZ.</string>
     <string name="blink_text">CANLILIĞI TESPİT ETMEK İÇİN GÖZ KIRPMALISINIZ..</string>
     <string name="redirect_to_customer_services">MÜŞTERİ TEMSİLCİSİNE YÖNLENDİRİLİYORSUNUZ...</string>
     <string name="finish_process">KİMLİK DOĞRULAMAYI TAMAMLADINIZ, TEŞEKKÜRLER...</string>
     <string name="turn_your_head_right_text">CANLILIĞI ALGILAMAK İÇİN BAŞINIZI 45 DERECE SAĞA DÖNDÜRMELİSİNİZ.</string>
     <string name="turn_your_head_left_text">SON OLARAK CANLILIĞI ALGILAMAK İÇİN BAŞINIZI 45 DERECE SOLA DÖNDÜRMELİSİNİZ.</string>
+    <string name="intro_welcome">Hoşgeldiniz</string>
+    <string name="intro_welcome_desc">Tanımlama sürecinde gerçekleştireceğimiz adımlar sırasıyla</string>
+    <string name="intro_ocr_desc">Kimliğinizin arkasını okutun.</string>
+    <string name="start">Başla</string>
+    <string name="intro_nfc_desc">Kimliğinizi telefonunuza yaklaştırarak NFC okutma</string>
+    <string name="intro_vitality_desc">Canlılık kontrolü (Lütfen gülümseyin 😊)</string>
+    <string name="intro_call_desc">Müşteri temsilcisine bağlanma</string>
+    <string name="intro_tan_desc">SMS ile doğrulama işlemi</string>
+    <string name="permission_title">Uygulama İzinleri</string>
+    <string name="permission_desc">Devam edebilmek için lütfen kamera ve mikrofon izinlerine onay veriniz.</string>
+    <string name="permission_btn">İzin Ver</string>
+    <string name="next">İleri</string>
+    <string name="back">Geri</string>
+    <string name="skip">Atla</string>
+
+
 </resources>

@@ -57,9 +57,9 @@ class CallWaitingFragment : BaseFragment(),
 
         viewModel.observeSocketStatus()
 
-        viewTitle.ivBack.setOnClickListener {
+     /*   viewTitle.ivBack.setOnClickListener {
             showSureFragment()
-        }
+        }*/
 
         onBackPressClicked()
 
@@ -165,7 +165,7 @@ class CallWaitingFragment : BaseFragment(),
 
         observe(viewModel.errorData) {
             linLayConnectionLost.visibility = View.VISIBLE
-            linLayConnectionSuccess.visibility = View.GONE
+            relLayCallWaiting.visibility = View.GONE
             btnReConnect.isEnabled = true
         }
 
@@ -173,19 +173,19 @@ class CallWaitingFragment : BaseFragment(),
             when(it){
                 SocketConnectionStatus.OPEN->{
                     btnReConnect.isEnabled = true
-                    linLayConnectionSuccess.visibility = View.VISIBLE
+                    relLayCallWaiting.visibility = View.VISIBLE
                     linLayConnectionLost.visibility = View.GONE
 
                 }
                 SocketConnectionStatus.CLOSE->{
                     linLayConnectionLost.visibility = View.VISIBLE
-                    linLayConnectionSuccess.visibility = View.GONE
+                    relLayCallWaiting.visibility = View.GONE
                     btnReConnect.isEnabled = true
 
                 }
                 SocketConnectionStatus.EXCEPTION->{
                     linLayConnectionLost.visibility = View.VISIBLE
-                    linLayConnectionSuccess.visibility = View.GONE
+                    relLayCallWaiting.visibility = View.GONE
                     Toasty.error(requireContext(),getString(R.string.reason_network),Toast.LENGTH_SHORT).show()
                     btnReConnect.isEnabled = true
                 }

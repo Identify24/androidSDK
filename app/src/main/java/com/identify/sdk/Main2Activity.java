@@ -23,6 +23,7 @@ public class Main2Activity extends AppCompatActivity {
         IdentityOptions options = new IdentityOptions.Builder()
                 .setIdentityType(IdentityType.ONLY_CALL) // Default value IdentityType.FULL_PROCESS
                 .setNfcExceptionCount(5) // Default value 3
+                .setOpenIntroPage(true) //Default true
                 .build();
 
 

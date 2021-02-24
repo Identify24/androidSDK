@@ -76,10 +76,7 @@ class OcrFragment : BaseFragment() ,
 
     override fun onResume() {
         super.onResume()
-       lifecycleScope.launch {
-           startCameraSource()
-       }
-
+         startCameraSource()
 
     }
 

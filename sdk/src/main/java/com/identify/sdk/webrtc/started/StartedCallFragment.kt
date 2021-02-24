@@ -22,6 +22,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.identify.sdk.IdentifyActivity
 import com.identify.sdk.R
+import com.identify.sdk.SdkApp.identityOptions
 import com.identify.sdk.base.ApiError
 import com.identify.sdk.base.BaseFragment
 import com.identify.sdk.base.State
@@ -117,7 +118,7 @@ class StartedCallFragment : BaseFragment()    {
                 goCallWaitFragmentFromFail()
             }
         }
-        handler?.postDelayed(runnable, 10000)
+        identityOptions?.getCallConnectionTimeOut()?.let { handler?.postDelayed(runnable, it) }
     }
 
 

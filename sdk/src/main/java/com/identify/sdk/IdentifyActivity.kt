@@ -5,6 +5,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
+import android.graphics.Color
 import android.net.Uri
 import android.nfc.NfcAdapter
 import android.nfc.Tag
@@ -12,13 +13,11 @@ import android.nfc.tech.IsoDep
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
-import android.view.Window
+import android.view.View
 import android.view.WindowManager
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.identify.sdk.SdkApp.destroy
@@ -26,6 +25,8 @@ import com.identify.sdk.SdkApp.identityOptions
 import com.identify.sdk.face.FaceDetectionFragment
 import com.identify.sdk.form.WebViewFormFragment
 import com.identify.sdk.form.WebViewFormListener
+import com.identify.sdk.intro.IntroFragment
+import com.identify.sdk.intro.IntroListener
 import com.identify.sdk.mrz.NfcFragment
 import com.identify.sdk.mrz.OcrFragment
 import com.identify.sdk.repository.model.CustomerInformationEntity
@@ -52,7 +53,7 @@ import java.util.*
 @ExperimentalCoroutinesApi
 class IdentifyActivity : AppCompatActivity(),
     NoInternetDialogFragment.NoInternetClickInterface,
-    OnFragmentTransactionListener, WebViewFormListener,IdentifyResultListener {
+    OnFragmentTransactionListener, WebViewFormListener,IdentifyResultListener,IntroListener {
 
     private var noInternetAlertDialogFragment : NoInternetDialogFragment?= null
 
@@ -70,10 +71,16 @@ class IdentifyActivity : AppCompatActivity(),
         }
         setContentView(R.layout.activity_identify)
         changeStatusBarColor()
-        showCameraWithPermissionCheck()
         supportActionBar?.hide()
         observeDataChanges()
         sdkListenerSetup()
+
+        identityOptions?.getOpenIntroPage()?.let {
+            if (it) showIntroFragment()
+            else onCheckPermission()
+
+        }
+
     }
 
     private fun sdkListenerSetup() {
@@ -175,6 +182,20 @@ class IdentifyActivity : AppCompatActivity(),
         }
     }
 
+    private fun showIntroFragment(){
+            if (supportFragmentManager.findFragmentByTag(IntroFragment::class.java.toString()) == null ){
+                supportFragmentManager.beginTransaction().add(R.id.fragmentContainer,IntroFragment.newInstance(),IntroFragment::class.java.toString()).commitAllowingStateLoss()
+                println("şimdi buradaydı = " + "show IntroFragment")
+            }
+    }
+
+    private fun removeIntroFragment(){
+        supportFragmentManager.findFragmentByTag(IntroFragment::class.java.toString())?.let {
+            supportFragmentManager.beginTransaction().remove(it).commitAllowingStateLoss()
+            println("şimdi buradaydı = " + "remove IntroFragment")
+        }
+    }
+
     private fun removeCallWaitingFragment(){
         supportFragmentManager.findFragmentByTag(CallWaitingFragment::class.java.toString())?.let {
             supportFragmentManager.beginTransaction().remove(it).commitAllowingStateLoss()
@@ -234,11 +255,15 @@ class IdentifyActivity : AppCompatActivity(),
 
 
     private fun changeStatusBarColor(){
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            val window: Window = window
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-            window.statusBarColor = ContextCompat.getColor(this,R.color.primaryDarkColor)
+     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+         window.apply {
+             clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+             addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+             decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+             statusBarColor = Color.TRANSPARENT
+         }
         }
+
     }
 
 
@@ -270,9 +295,7 @@ class IdentifyActivity : AppCompatActivity(),
                                 checkNfcExisting()
                             }
                         }
-                    }
-                    else->{
-                        showCallWaitingFragment()
+                        removeIntroFragment()
                     }
                 }
 
@@ -405,7 +428,7 @@ class IdentifyActivity : AppCompatActivity(),
 
     @OnPermissionDenied(Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO)
     fun onPermissionDenied(){
-        finish()
+
     }
 
     private fun openPermissionSettings() {
@@ -561,6 +584,11 @@ class IdentifyActivity : AppCompatActivity(),
 
     override fun callProcessFinished() {
         IdentifySdk.getInstance().resultCallback(Pair(IdentityResultType.CALL,null))
+    }
+
+
+    override fun onCheckPermission() {
+        showCameraWithPermissionCheck()
     }
 
 

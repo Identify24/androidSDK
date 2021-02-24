@@ -71,7 +71,7 @@
         android:id="@+id/relLayCallWaiting"
         android:layout_width="match_parent"
         android:visibility="visible"
-        android:background="@color/primaryColor"
+        android:background="@drawable/new_background_270"
         android:layout_height="match_parent">
         <TextView
             android:id="@+id/callWaitingTxt"

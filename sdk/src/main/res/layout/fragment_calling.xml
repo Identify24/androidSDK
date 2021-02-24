@@ -1,63 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:background="@color/softBlue"
         android:layout_height="match_parent"
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto">
 
-        <com.airbnb.lottie.LottieAnimationView
-            android:id="@+id/callLoadingAnimation"
-            android:layout_width="256dp"
-            android:layout_height="256dp"
-            android:layout_marginTop="30dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:lottie_autoPlay="true"
-            app:lottie_loop="true"
-            app:lottie_rawRes="@raw/calling_animation" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:visibility="visible"
+        android:id="@+id/relLayCallWaiting"
+        android:background="@drawable/new_background_270"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
 
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/titleBoldTxt"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:padding="20dp"
-            android:textSize="16sp"
-            app:fontFamily="@font/roboto_bold"
-            android:textColor="@android:color/white"
-            android:text="@string/receiving_a_call"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-           app:layout_constraintTop_toBottomOf="@+id/callLoadingAnimation" />
-
-        <LinearLayout
+        <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/titleBoldTxt">
+            android:src="@drawable/ic_kb_logo"
+            android:layout_marginTop="20dp"
+            android:layout_centerHorizontal="true" />
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scaleType="fitXY"
+            android:id="@+id/imgIllustration"
+            android:layout_marginTop="80dp"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/ic_calling_illustration"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/nexa_slab_bold"
+            android:textColor="@android:color/white"
+            android:textSize="24sp"
+            android:id="@+id/tvTitle"
+            android:text="@string/receiving_a_call"
+            android:layout_below="@+id/imgIllustration"
+            android:layout_marginTop="-40dp"
+            android:layout_marginEnd="30dp"
+            android:layout_marginStart="30dp"
+            android:gravity="center"
+            android:layout_centerHorizontal="true"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/nunito_sans_regular"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"
+            android:id="@+id/tvDesc"
+            android:text="@string/calling_description"
+            android:layout_below="@+id/tvTitle"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="30dp"
+            android:layout_marginStart="30dp"
+            android:gravity="center"
+            android:layout_centerHorizontal="true"
+            />
 
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/buttonAcceptCall"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:fabCustomSize="70dp"
-                android:layout_margin="24dp"
-                android:tint="@android:color/white"
-                app:backgroundTint="@color/colorGreen"
-                app:srcCompat="@drawable/ic_call" />
+     <RelativeLayout
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_centerHorizontal="true"
+         android:layout_below="@+id/tvDesc">
+         <ImageButton
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:id="@+id/btnAcceptCall"
+             android:src="@drawable/ic_call_btn"
+             android:layout_centerVertical="true"
+             android:background="@android:color/transparent"
+             android:layout_centerHorizontal="true"/>
+     </RelativeLayout>
 
-        <!--    <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/buttonRejectCall"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="24dp"
-                app:backgroundTint="@color/colorRed"
-                app:srcCompat="@drawable/ic_close_black"
-                android:tint="@android:color/white" />-->
-        </LinearLayout>
+
+
+    </RelativeLayout>
+
+
     </androidx.constraintlayout.widget.ConstraintLayout>

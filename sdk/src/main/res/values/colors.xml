@@ -27,6 +27,9 @@
 	<color name="successGreenText">#ff379b1d</color>
 	<color name="colorStarterBlue">#27FFE1</color>
 	<color name="colorEndBlue">#4F2ED9</color>
+	<color name="color270EndBlue">#4F2ED9</color>
+	<color name="colorDarkBlue">#3227C9</color>
+	<color name="colorDarkYellow">#EFCD18</color>
 
 
 

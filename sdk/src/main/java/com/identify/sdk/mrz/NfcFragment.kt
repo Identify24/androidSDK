@@ -201,7 +201,7 @@ class NfcFragment : BaseFragment() {
         if (viewModel.nfcExceptionCounter >= identityOptions?.getNfcExceptionCount()!!){
             viewModel.nfcStatusType = NfcStatusType.FAILURE
             viewModel.nfcStatusSendFromSocket(NfcStatusType.FAILURE)
-            requireContext().alert(false, getString(R.string.nfc_error_count_btn),null,getString(R.string.nfc_error_count_title),getString(R.string.nfc_error_count_desc),{ dialog ->
+            requireContext().alert(false, getString(R.string.go_on),null,getString(R.string.nfc_error_count_title),getString(R.string.nfc_error_count_desc),{ dialog ->
                 dialog.dismiss()
             },{},{})
         }else{

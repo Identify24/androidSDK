@@ -13,17 +13,18 @@ class MainActivity : AppCompatActivity() {
 
 
         val options = IdentityOptions.Builder()
-            .setIdentityType(IdentityType.FULL_PROCESS)
+            .setIdentityType(IdentityType.ONLY_CALL)
             .setNfcExceptionCount(3)
+            .setOpenIntroPage(true)
             .build()
 
         val identifyObject = IdentifySdk.Builder()
-            .api("api url")
-            .socket("socket url","socket port")
-            .stun("stun url","stun port")
-            .turn("turn url","turn port","turn username","turn password")
-            .options(options)
-            .build()
+                .api("api url")
+                .socket("socket url","socket port")
+                .stun("stun url","stun port")
+                .turn("turn url","turn port","turn username","turn password")
+                .options(options)
+                .build()
 
 
         identifyObject.startIdentification(this,"xxxx-xxxx-xxxx-xxxx-xxxxxxx","language")

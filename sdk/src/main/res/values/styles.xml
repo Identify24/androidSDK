@@ -6,7 +6,6 @@
 		<item name="colorPrimaryDark">@color/primaryDarkColor</item>
 		<item name="colorSecondary">@color/secondaryColor</item>
 		<item name="colorAccent">@color/secondaryDarkColor</item>
-
 		<item name="android:textColorPrimary">@color/primaryTextColor</item>
 		<item name="android:textColorSecondary">@color/secondaryTextColor</item>
 		<item name="toolbarStyle">@style/AppTheme.ToolbarStyle</item>

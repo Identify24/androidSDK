@@ -52,7 +52,7 @@ class CallingFragment : BaseFragment()   {
        /* buttonRejectCall.setOnClickListener {
             onFragmentTransactionListener?.onRemoveCallingFragment()
         }*/
-        buttonAcceptCall.setOnClickListener {
+        btnAcceptCall.setOnClickListener {
             setCallStartedFragmentDefaultArgument()
             goStartedCallFragment()
 

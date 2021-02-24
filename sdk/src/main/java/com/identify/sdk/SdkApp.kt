@@ -18,7 +18,7 @@ object SdkApp {
 
 
     init {
-        identityOptions = IdentityOptions.Builder().setIdentityType(IdentityType.FULL_PROCESS).setNfcExceptionCount(3).build()
+        identityOptions = IdentityOptions.Builder().setIdentityType(IdentityType.FULL_PROCESS).setNfcExceptionCount(3).setOpenIntroPage(true).setCallConnectionTimeOut(10000).build()
     }
 
 
