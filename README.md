@@ -36,6 +36,7 @@ Firstly, you have to create options for sdk.Then get a singleton object by set t
         .socket("socket url","socket port")
         .stun("stun url","stun port")
         .turn("turn url","turn port","turn username","turn password")
+	.options(options)
         .build()
 	
  identifyObject.startIdentification(this,"xxxx-xxxx-xxxx-xxxx-xxxxxxx","tr")
@@ -60,6 +61,7 @@ Firstly, you have to create options for sdk.Then get a singleton object by set t
          .socket("socket url","socket port")
          .stun("stun url","stun port")
          .turn("turn url","turn port","turn username","turn password")
+	 .options(options)
          .build();
 	 
  identifyObject.startIdentification(this,"xxxx-xxxx-xxxx-xxxx-xxxxxxx","language");
