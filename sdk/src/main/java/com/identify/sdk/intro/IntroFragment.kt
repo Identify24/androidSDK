@@ -158,13 +158,12 @@ class IntroFragment : BaseFragment() {
                 viewPagerPosition = position
                 when(position){
                     0->{
-                        tvSkipBack.text = getString(R.string.skip)
-                        imgLeftArrow.visibility = View.GONE
-                        tvNext.setTextColor(ContextCompat.getColor(requireContext(),android.R.color.white))
+                        introFirstStatus()
                     }
                     1->{
                         if (identityOptions?.getIdentityType() == IdentityType.ONLY_CALL){
                             tvNext.text = getString(R.string.go_on)
+                            tvSkipBack.text = getString(R.string.back)
                             tvNext.setTextColor(ContextCompat.getColor(requireContext(),R.color.colorDarkYellow))
                             imgRightArrow.visibility = View.GONE
                         }else{
@@ -201,6 +200,14 @@ class IntroFragment : BaseFragment() {
         tvNext.text = getString(R.string.next)
         tvSkipBack.text = getString(R.string.back)
         imgLeftArrow.visibility = View.VISIBLE
+        imgRightArrow.visibility = View.VISIBLE
+        tvNext.setTextColor(ContextCompat.getColor(requireContext(),android.R.color.white))
+    }
+
+    fun introFirstStatus(){
+        tvNext.text = getString(R.string.next)
+        tvSkipBack.text = getString(R.string.skip)
+        imgLeftArrow.visibility = View.GONE
         imgRightArrow.visibility = View.VISIBLE
         tvNext.setTextColor(ContextCompat.getColor(requireContext(),android.R.color.white))
     }

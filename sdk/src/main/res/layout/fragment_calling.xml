@@ -1,35 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto">
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:visibility="visible"
-        android:id="@+id/relLayCallWaiting"
-        android:background="@drawable/new_background_270"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent">
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:visibility="visible"
+    android:id="@+id/relLayCallWaiting"
+    android:background="@drawable/new_background_270"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_kb_logo"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="30dp"
             android:layout_centerHorizontal="true" />
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:scaleType="fitXY"
+            android:adjustViewBounds="true"
             android:id="@+id/imgIllustration"
-            android:layout_marginTop="80dp"
             android:layout_centerHorizontal="true"
-            android:src="@drawable/ic_calling_illustration"
+            android:src="@drawable/ic_customer_representative_illustration"
             />
         <TextView
             android:layout_width="wrap_content"
@@ -40,7 +31,7 @@
             android:id="@+id/tvTitle"
             android:text="@string/receiving_a_call"
             android:layout_below="@+id/imgIllustration"
-            android:layout_marginTop="-40dp"
+            android:layout_marginTop="-160dp"
             android:layout_marginEnd="30dp"
             android:layout_marginStart="30dp"
             android:gravity="center"
@@ -80,6 +71,3 @@
 
 
     </RelativeLayout>
-
-
-    </androidx.constraintlayout.widget.ConstraintLayout>

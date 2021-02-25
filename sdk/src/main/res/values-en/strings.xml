@@ -47,9 +47,10 @@
     <string name="success_connection">Our identify-agent is there for you right away.</string>
     <string name="connection_try_again">Try again</string>
     <string name="connection_error_title">Please check your connection and click the button to connect with our identify-agent</string>
-    <string name="enter_pin">Please enter the TAN</string>
+    <string name="enter_pin">Sms code is missing. Please check it.</string>
     <string name="enter_pin_description">Please enter the TAN</string>
     <string name="confirm">Confirm</string>
+    <string name="vitality_title">Vitality Control</string>
     <string name="are_you_sure_title">Are you sure you want to cancel?</string>
     <string name="nfc_error_count_title">Nfc Data Read Counter Error</string>
     <string name="nfc_error_count_desc">You have reached the maximum number of nfc read errors. Continue with the customer representative.</string>

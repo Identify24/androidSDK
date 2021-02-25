@@ -14,8 +14,8 @@
                         <option name="values">
                           <map>
                             <entry key="assetSourceType" value="FILE" />
-                            <entry key="outputName" value="ic_nfc_ready_illustration" />
-                            <entry key="sourceFile" value="$PROJECT_DIR$/../Downloads/NFC-Scan/nfc_ready_illustration.svg" />
+                            <entry key="outputName" value="ic_id_card" />
+                            <entry key="sourceFile" value="$PROJECT_DIR$/../Downloads/OCR-Scan/ID-Card.svg" />
                           </map>
                         </option>
                       </PersistentState>

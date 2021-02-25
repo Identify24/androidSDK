@@ -27,7 +27,7 @@ import com.identify.sdk.SdkApp.identityOptions
 import com.identify.sdk.base.BaseFragment
 import com.identify.sdk.face.facedetector.MLKitFaceProcessorListener
 import com.identify.sdk.face.facedetector.MLKitFacesAnalyzer
-import com.identify.sdk.face.information.FaceInformationDialogFragment
+import com.identify.sdk.information.InformationDialogFragment
 import com.identify.sdk.repository.model.enums.FaceDetectionProcessType
 import com.identify.sdk.repository.model.enums.IdentityType
 import com.identify.sdk.util.observe
@@ -44,7 +44,7 @@ import java.util.concurrent.Executors
 
 @ExperimentalCoroutinesApi
 class FaceDetectionFragment : BaseFragment(),
-    FaceInformationDialogFragment.FaceInformationStatusListener {
+    InformationDialogFragment.FaceInformationStatusListener {
 
 
     private var lensFacing = CameraSelector.LENS_FACING_FRONT
@@ -98,8 +98,8 @@ class FaceDetectionFragment : BaseFragment(),
     }
 
     fun openInformationDialog(anim : Int, text : String){
-        val fragment = FaceInformationDialogFragment.newInstance(anim,text)
-        fragment.show(childFragmentManager,FaceInformationDialogFragment::class.java.toString())
+        val fragment = InformationDialogFragment.newInstance(anim,null,getString(R.string.vitality_title),text)
+        fragment.show(childFragmentManager, InformationDialogFragment::class.java.toString())
     }
 
     private fun startCamera() {

@@ -42,7 +42,7 @@
 	<string name="success_connection">Unser identify-Agent ist gleich für Sie da</string>
 	<string name="connection_try_again">Erneut verbinden</string>
 	<string name="connection_error_title">Überprüfen Sie Ihre Internetverbindung und klicken Sie auf die Schaltfläche, um eine Verbindung zu unserem Identify-Agent herzustellen</string>
-	<string name="enter_pin">Bitte die TAN eingeben</string>
+	<string name="enter_pin">SMS-Code fehlt. Überprüfen Sie bitte das</string>
 	<string name="enter_pin_description">Bitte geben Sie die TAN ein</string>
 	<string name="confirm">Bestätigen</string>
 	<string name="support_error">Unterstützender Support-Fehler</string>
@@ -54,6 +54,7 @@
 	<string name="nfc_error_count_title">Nfc Data Read Counter Error</string>
 	<string name="nfc_error_count_desc">Sie haben die maximale Anzahl von NFC-Lesefehlern erreicht. Fahren Sie mit dem Kundenvertreter fort.</string>
 	<string name="go_on">Fortsetzen</string>
+	<string name="vitality_title">Vitalitätskontrolle</string>
 	<string name="smiling_text">Sie können mit einem kraftvollen Lächeln weitermachen.</string>
 	<string name="blink_text">Sie müssen blinken, um Vitalität zu erkennen..</string>
 	<string name="turn_your_head_right_text">Drehen Sie Ihren Kopf um 45 Grad nach rechts, um die Vitalität zu erkennen.</string>

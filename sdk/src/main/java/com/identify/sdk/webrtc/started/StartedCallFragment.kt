@@ -17,6 +17,8 @@ import android.widget.ProgressBar
 import android.widget.RelativeLayout
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.cardview.widget.CardView
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -29,11 +31,13 @@ import com.identify.sdk.base.State
 import com.identify.sdk.repository.model.SocketActionType
 import com.identify.sdk.repository.model.enums.SdpType
 import com.identify.sdk.repository.model.enums.SocketConnectionStatus
+import com.identify.sdk.util.changed
 import com.identify.sdk.util.observe
 import com.identify.sdk.webrtc.CallViewModel
 import com.identify.sdk.webrtc.OnFragmentTransactionListener
 import com.identify.sdk.webrtc.sure.AreYouSureDialogFragment
 import es.dmoral.toasty.Toasty
+import kotlinx.android.synthetic.main.fragment_bottom_tan.*
 import kotlinx.android.synthetic.main.fragment_started_call.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.webrtc.EglBase
@@ -302,6 +306,12 @@ class StartedCallFragment : BaseFragment()    {
             }
         }
 
+         observe(viewModel.tanError){
+          if (it){
+              Toasty.error(requireContext(),getString(R.string.enter_pin),Toasty.LENGTH_SHORT).show()
+           }
+         }
+
 
     }
 
@@ -367,17 +377,50 @@ class StartedCallFragment : BaseFragment()    {
     private fun showBottomSheetDialog() {
         tanView = layoutInflater.inflate(R.layout.fragment_bottom_tan, null,false)
          mBehavior  =  BottomSheetBehavior.from(bottomSheetContainer)
-        if (mBehavior?.state === BottomSheetBehavior.STATE_EXPANDED) {
-            mBehavior?.state = BottomSheetBehavior.STATE_COLLAPSED
-        }
+        mBehavior?.state = BottomSheetBehavior.STATE_EXPANDED
+        mBehavior?.skipCollapsed = true
          mBottomSheetDialog  = BottomSheetDialog(requireContext(), R.style.AppBottomSheetDialogTheme)
+        mBottomSheetDialog?.behavior?.isDraggable = false
+        mBottomSheetDialog?.behavior?.isHideable = false
+        mBottomSheetDialog?.setCancelable(false)
+        mBottomSheetDialog?.setCanceledOnTouchOutside(false)
          tanView?.rootView?.let { mBottomSheetDialog?.setContentView(it) }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             mBottomSheetDialog?.window?.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
         }
         mBottomSheetDialog?.show()
-        (tanView?.findViewById<RelativeLayout>(R.id.relLaySendSmsCode))?.setOnClickListener {
-            viewModel.tanCode = (tanView?.findViewById<EditText>(R.id.etPin))?.text.toString()
+        val pin1 = tanView?.findViewById<EditText>(R.id.etPin1)
+        val pin2 = tanView?.findViewById<EditText>(R.id.etPin2)
+        val pin3 = tanView?.findViewById<EditText>(R.id.etPin3)
+        val pin4 = tanView?.findViewById<EditText>(R.id.etPin4)
+        val pin5 = tanView?.findViewById<EditText>(R.id.etPin5)
+        val pin6 = tanView?.findViewById<EditText>(R.id.etPin6)
+        val sendBtn = tanView?.findViewById<CardView>(R.id.relLaySendSmsCode)
+        pin1?.changed { pin2?.requestFocus() }
+        pin2?.changed { pin3?.requestFocus() }
+        pin3?.changed { pin4?.requestFocus() }
+        pin4?.changed { pin5?.requestFocus() }
+        pin5?.changed { pin6?.requestFocus() }
+        pin1?.setOnFocusChangeListener { _, b ->
+            if (b) onStartFocusEditText(pin1) else onFinishFocusEditText(pin1)
+        }
+        pin2?.setOnFocusChangeListener { _, b ->
+            if (b) onStartFocusEditText(pin2) else onFinishFocusEditText(pin2)
+        }
+        pin3?.setOnFocusChangeListener { _, b ->
+            if (b) onStartFocusEditText(pin3) else onFinishFocusEditText(pin3)
+        }
+        pin4?.setOnFocusChangeListener { _, b ->
+            if (b) onStartFocusEditText(pin4) else onFinishFocusEditText(pin4)
+        }
+        pin5?.setOnFocusChangeListener { _, b ->
+            if (b) onStartFocusEditText(pin5) else onFinishFocusEditText(pin5)
+        }
+        pin6?.setOnFocusChangeListener { _, b ->
+            if (b) onStartFocusEditText(pin6) else onFinishFocusEditText(pin6)
+        }
+        sendBtn?.setOnClickListener {
+            viewModel.tanCode = pin1?.text.toString().trim()+pin2?.text.toString().trim()+pin3?.text.toString().trim()+pin4?.text.toString().trim()+pin5?.text.toString().trim()+pin6?.text.toString().trim()
             viewModel.setSmsCode()
         }
         mBottomSheetDialog?.setOnDismissListener(DialogInterface.OnDismissListener {
@@ -385,6 +428,16 @@ class StartedCallFragment : BaseFragment()    {
             tanView = null
             mBehavior = null
         })
+    }
+
+    fun onStartFocusEditText(edt : EditText){
+        edt.alpha = 1f
+        edt.background = ContextCompat.getDrawable(requireContext(),R.drawable.all_yellow_border_white_bg)
+    }
+
+    fun onFinishFocusEditText(edt : EditText){
+        edt.alpha = 0.5f
+        edt.background = ContextCompat.getDrawable(requireContext(),R.drawable.all_grey_border_white_bg)
     }
 
 

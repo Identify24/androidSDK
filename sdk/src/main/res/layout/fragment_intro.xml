@@ -36,6 +36,7 @@
             android:id="@+id/tvWelcome"
             android:textColor="@android:color/white"
             android:textSize="26sp"
+            android:layout_marginTop="-50dp"
             android:layout_centerHorizontal="true"
             android:text="@string/intro_welcome"
             android:layout_below="@+id/imgBackground"/>
@@ -60,7 +61,7 @@
             app:cardBackgroundColor="@android:color/white"
             android:layout_below="@+id/tvDesc"
             android:layout_marginEnd="32dp"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="30dp"
             android:layout_marginStart="32dp"
             app:cardCornerRadius="12dp"
             app:cardElevation="4dp">
@@ -97,7 +98,7 @@
         android:id="@+id/tabLayout"
         android:layout_width="wrap_content"
         android:layout_height="20dp"
-        android:layout_marginBottom="50dp"
+        android:layout_marginBottom="30dp"
         android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"
         android:background="@drawable/indicator_rectangle"
@@ -107,7 +108,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_alignParentBottom="true"
-            android:layout_marginBottom="70dp"
+            android:layout_marginBottom="60dp"
             android:layout_height="wrap_content">
             <RelativeLayout
                 android:layout_width="wrap_content"

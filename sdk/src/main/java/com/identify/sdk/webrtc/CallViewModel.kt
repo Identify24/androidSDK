@@ -55,6 +55,7 @@ class CallViewModel  : BaseViewModel<SocketResponse>() {
 
 
     val tanResponse = MutableLiveData<TanEntity>()
+    var tanError = MutableLiveData<Boolean>()
     var tanId : String ?= null
     var tanCode : String ?= null
 
@@ -74,7 +75,7 @@ class CallViewModel  : BaseViewModel<SocketResponse>() {
     }
 
 
-     fun connectSocket(isComingNfc : Boolean,nfcStatusType : NfcStatusType ) {
+     fun connectSocket(isComingNfc : Boolean,nfcStatusType : NfcStatusType? ) {
          viewModelScope.launch {
              socketSource.ifExistSocketConnection()
              socketSource.socketEvent().collect {
@@ -110,7 +111,7 @@ class CallViewModel  : BaseViewModel<SocketResponse>() {
 
                                      }
                                      false->{
-                                         val resp = sendNfcSubscribe(isComingNfc)
+                                         val resp = sendNewSubscribe()
                                          resp.onSuccess {response -> 
                                              handleActivitySuccess(response) }
                                          resp.onFailure {handleActivityFailure() }
@@ -292,24 +293,24 @@ class CallViewModel  : BaseViewModel<SocketResponse>() {
 
 
     fun setSmsCode(){
-        tanId?.let { tid ->
-            tanCode?.let { code ->
+        if (tanCode != null && tanCode?.length == 6){
+            tanId?.let { tid ->
                 viewModelScope.launch {
                     handleState(State.Loading())
 
-                    apiImpl.service?.setSmsCode(TanDto(tid,code))?.enqueue( object :
-                        Callback<BaseApiResponse<TanEntity?>> {
+                    apiImpl.service?.setSmsCode(TanDto(tid, tanCode!!))?.enqueue( object :
+                            Callback<BaseApiResponse<TanEntity?>> {
                         override fun onFailure(
-                            call: Call<BaseApiResponse<TanEntity?>>,
-                            t: Throwable
+                                call: Call<BaseApiResponse<TanEntity?>>,
+                                t: Throwable
                         ) {
                             t.message?.let { handleFailure(ResponseError()) }
                             handleState(State.Loaded())
                         }
 
                         override fun onResponse(
-                            call: Call<BaseApiResponse<TanEntity?>>,
-                            response: Response<BaseApiResponse<TanEntity?>>
+                                call: Call<BaseApiResponse<TanEntity?>>,
+                                response: Response<BaseApiResponse<TanEntity?>>
                         ) {
                             if (response.isSuccessful && response.body()?.result == true){
                                 response.body()?.data.let {
@@ -327,6 +328,10 @@ class CallViewModel  : BaseViewModel<SocketResponse>() {
                 }
             }
         }
+        else{
+            tanError.value = true
+        }
+
     }
 
     private fun tanCodeResultWillSendWithSocket(){

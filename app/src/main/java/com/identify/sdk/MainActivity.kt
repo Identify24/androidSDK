@@ -13,21 +13,22 @@ class MainActivity : AppCompatActivity() {
 
 
         val options = IdentityOptions.Builder()
-            .setIdentityType(IdentityType.ONLY_CALL)
+            .setIdentityType(IdentityType.FULL_PROCESS)
             .setNfcExceptionCount(3)
+            .setCallConnectionTimeOut(5000)
             .setOpenIntroPage(true)
             .build()
 
         val identifyObject = IdentifySdk.Builder()
-                .api("api url")
-                .socket("socket url","socket port")
-                .stun("stun url","stun port")
-                .turn("turn url","turn port","turn username","turn password")
-                .options(options)
-                .build()
+            .api("https://api.kimlikbasit.com")
+            .socket("wss://ws.kimlikbasit.com","8888")
+            .stun("stun:stun.l.google.com","19302")
+            .turn("turn:18.156.205.32","3478","test","test")
+            .options(options)
+            .build()
 
 
-        identifyObject.startIdentification(this,"xxxx-xxxx-xxxx-xxxx-xxxxxxx","language")
+        identifyObject.startIdentification(this,"8f41593d-7699-11eb-8802-06a1762f812e","tr")
 
         identifyObject.identifyErrorListener = object : IdentifyErrorListener{
             override fun identError(errorMessage: String) {

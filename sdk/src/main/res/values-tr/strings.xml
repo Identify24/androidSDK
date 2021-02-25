@@ -47,8 +47,8 @@
     <string name="success_connection">Müşteri temsilciniz hemen hizmetinizde!</string>
     <string name="connection_try_again">Tekrar bağlan…</string>
     <string name="connection_error_title">Bağlantınızı kontrol ediniz ve müşteri temsilcisine bağlanmak icin butona tıklayınız.</string>
-    <string name="enter_pin">SMS-Opt giriniz.</string>
-    <string name="enter_pin_description">Lütfen SMS-Opt giriniz.</string>
+    <string name="enter_pin">Sms kodu eksik. Lütfen kontrol ediniz.</string>
+    <string name="enter_pin_description">Lütfen SMS-Otp giriniz.</string>
     <string name="confirm">Onay</string>
     <string name="are_you_sure_title">Bekleme odasından çıktığınızda müşteri temsilcisi sizi arayamıyacak. Emin misiniz ?</string>
     <string name="nfc_error_count_title">Nfc Veri Okuma Sayacı Hatası</string>
@@ -66,6 +66,7 @@
     <string name="start">Başla</string>
     <string name="intro_nfc_desc">Kimliğinizi telefonunuza yaklaştırarak NFC okutma</string>
     <string name="intro_vitality_desc">Canlılık kontrolü (Lütfen gülümseyin 😊)</string>
+    <string name="vitality_title">Canlılık Kontrolü</string>
     <string name="intro_call_desc">Müşteri temsilcisine bağlanma</string>
     <string name="intro_tan_desc">SMS ile doğrulama işlemi</string>
     <string name="permission_title">Uygulama İzinleri</string>

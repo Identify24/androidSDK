@@ -1,42 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    android:id="@+id/relLayWelcome"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/new_background"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <include
-        android:id="@+id/viewTitle"
-        layout="@layout/app_toolbar"
-        android:layout_width="match_parent"
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_marginTop="60dp"
+        android:id="@+id/imgBackground"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
         android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:background="@color/primaryColor"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/viewTitle"
-        app:layout_constraintBottom_toBottomOf="parent">
-        <ImageView
-            android:id="@+id/toolbarImg"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/tvThanks"
-            android:layout_margin="20dp"
-            android:src="@drawable/kimlik_basit"/>
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="20sp"
-            android:fontFamily="@font/roboto_bold"
-            android:gravity="center"
-            android:id="@+id/tvThanks"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:textColor="@android:color/white"
-            android:text="@string/finish_process"/>
-    </RelativeLayout>
+        android:src="@drawable/ic_kimlik_basit_icon"/>
+    <ImageView
+        android:layout_width="250dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="-200dp"
+        android:layout_below="@id/imgBackground"
+        android:src="@drawable/ic_kb_logo"
+        android:layout_centerHorizontal="true"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/nexa_slab_bold"
+        android:id="@+id/tvWelcome"
+        android:textColor="@android:color/white"
+        android:textSize="22sp"
+        android:gravity="center"
+        android:layout_marginTop="-50dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_centerHorizontal="true"
+        android:text="@string/finish_process"
+        android:layout_below="@+id/imgBackground"/>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</RelativeLayout>

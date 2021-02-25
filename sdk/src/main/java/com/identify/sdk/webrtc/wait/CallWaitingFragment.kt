@@ -65,7 +65,7 @@ class CallWaitingFragment : BaseFragment(),
 
         btnReConnect.setOnClickListener {
                 btnReConnect.isEnabled = false
-                viewModel.nfcStatusType?.let { it1 -> viewModel.connectSocket(false, it1) }
+                viewModel.connectSocket(false, null)
                 Toasty.info(requireContext(),"Lütfen Bekleyin",Toast.LENGTH_SHORT).show()
         }
 
@@ -111,7 +111,7 @@ class CallWaitingFragment : BaseFragment(),
 
     override fun onResume() {
         super.onResume()
-        viewModel.nfcStatusType?.let { viewModel.connectSocket(false, it) }
+        viewModel.connectSocket(false, null)
     }
 
 

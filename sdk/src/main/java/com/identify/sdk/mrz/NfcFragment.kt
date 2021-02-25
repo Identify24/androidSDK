@@ -56,9 +56,6 @@ class NfcFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewTitle.ivBack.setOnClickListener {
-            onFragmentTransactionListener?.onRemoveNfcFragment()
-        }
         observeDataChanges()
         onBackPressClicked()
     }
@@ -105,7 +102,8 @@ class NfcFragment : BaseFragment() {
     }
 
     private fun startNfcReading() {
-        linLayScannerReady.visibility = View.GONE
+        relLayDefaultNfc.visibility = View.GONE
+        linLayReadNfc.visibility = View.VISIBLE
         nfcStatusTv.text = getString(R.string.nfc_reading)
         nfcAnimation.setAnimation(R.raw.nfc_reading)
         nfcAnimation.repeatCount = LottieDrawable.INFINITE
