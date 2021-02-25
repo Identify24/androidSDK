@@ -28,6 +28,7 @@ Firstly, you have to create options for sdk.Then get a singleton object by set t
             .setIdentityType(IdentityType.ONLY_CALL) // Default value IdentityType.FULL_PROCESS
             .setNfcExceptionCount(5) // Default value 3
 	    .setOpenIntroPage(false) // Default true
+	    .setCallConnectionTimeOut(5000) //Default 10000 ms
             .build()
 
   val identifyObject = IdentifySdk.Builder()
@@ -51,6 +52,7 @@ Firstly, you have to create options for sdk.Then get a singleton object by set t
                 .setIdentityType(IdentityType.ONLY_CALL) // Default value IdentityType.FULL_PROCESS
                 .setNfcExceptionCount(5) // Default value 3
 		.setOpenIntroPage(false) // Default true
+		.setCallConnectionTimeOut(5000) //Default 10000 ms
                 .build();
 
  IdentifySdk identifyObject = new IdentifySdk.Builder()
